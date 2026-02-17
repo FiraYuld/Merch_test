@@ -1,7 +1,7 @@
 /* --- 1. Глобальные настройки --- */
 body {
-  background-color: #f4f4f7; /* Мягкий беловатый фон приложения */
-  color: #2D2D32; /* Глубокий серый текст */
+  background-color: #ffffff; /* Чистый белый фон для самого сайта */
+  color: #2D2D32; 
   font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   margin: 0;
   -webkit-font-smoothing: antialiased;
@@ -18,7 +18,7 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 2px solid #e1e1e8; 
+  border-bottom: 2px solid #f0f0f5; 
   padding-bottom: 15px;
   margin-bottom: 20px;
 }
@@ -53,7 +53,7 @@ body {
 .filters::-webkit-scrollbar { display: none; }
 
 .filter-btn {
-  background-color: #ffffff;
+  background-color: #f4f4f7;
   color: #8E8E93;
   border: 1px solid #e1e1e8;
   padding: 8px 18px;
@@ -74,18 +74,26 @@ body {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 12px;
+  align-items: stretch; /* Карточки в одном ряду будут одинаковой высоты */
 }
 
 .product-card {
-  background-color: #ffffff; /* Чисто белая карточка на сероватом фоне */
+  background-color: #f4f4f7; /* Сероватый фон карточки (темнее сайта) */
   border-radius: 20px;
   padding: 12px;
   display: flex;
   flex-direction: column;
-  justify-content: space-between; /* Выравнивание: контент сверху, кнопка снизу */
   border: 1px solid #e1e1e8;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03);
-  min-height: 250px; /* Чтобы пустые карточки не схлопывались */
+  height: 100%; /* Карточка занимает всю высоту выделенной ей ячейки */
+  box-sizing: border-box;
+}
+
+/* СЕКРЕТ ВЫРАВНИВАНИЯ: Эта зона занимает всё пустое пространство */
+.clickable-area {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1; 
+  cursor: pointer;
 }
 
 .product-image {
@@ -93,11 +101,12 @@ body {
   height: 120px;
   border-radius: 14px;
   overflow: hidden;
-  background-color: #f9f9fb;
+  background-color: #ffffff;
   margin-bottom: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
+  font-size: 50px;
 }
 
 .product-image img {
@@ -120,35 +129,35 @@ body {
   font-weight: 600;
   color: #1a1b21;
   line-height: 1.2;
-  /* Ограничение высоты текста для выравнивания */
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  min-height: 34px; 
 }
 
+/* Так как clickable-area выросла, эта зона всегда прижата к низу */
 .card-bottom {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: auto; /* Толкает вниз */
+  margin-top: 10px; 
 }
 
 .product-price {
   font-size: 16px;
   font-weight: 800;
-  color: #5482d8; /* Затемненный золотой для лучшей видимости */
+  color: #5482d8; /* ОСТАВЛЕН ТВОЙ СИНИЙ ЦВЕТ */
 }
 
 .buy-btn-small {
   background-color: #D8548C;
-  color: white;
+  color: #ffffff !important; /* Строго белый плюсик */
   border: none;
   width: 36px;
   height: 36px;
   border-radius: 12px;
   font-size: 20px;
+  font-weight: bold;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -157,7 +166,7 @@ body {
 
 /* --- 5. Экран Корзины --- */
 .cart-item {
-  background-color: #ffffff;
+  background-color: #f4f4f7;
   border: 1px solid #e1e1e8;
   padding: 12px;
   border-radius: 18px;
@@ -173,6 +182,11 @@ body {
   border-radius: 10px;
   overflow: hidden;
   flex-shrink: 0;
+  background-color: #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 25px;
 }
 
 .cart-item-img img {
@@ -183,7 +197,7 @@ body {
 
 /* --- 6. Форма и Итоги --- */
 .user-form {
-  background-color: #ffffff;
+  background-color: #f4f4f7;
   border: 1px solid #D8548C;
   padding: 15px;
   border-radius: 18px;
@@ -201,7 +215,7 @@ body {
 }
 
 .cart-summary {
-  background-color: #ffffff;
+  background-color: #f4f4f7;
   border: 2px solid #F3D067;
   padding: 20px;
   border-radius: 20px;
@@ -218,7 +232,12 @@ body {
   font-size: 16px;
 }
 
-/* --- 7. Модальное окно (Фикс картинки) --- */
+.checkout-btn.disabled {
+  background-color: #e1e1e8;
+  color: #8E8E93;
+}
+
+/* --- 7. Модальное окно --- */
 .modal-overlay {
   background-color: rgba(255, 255, 255, 0.8);
   backdrop-filter: blur(10px);
@@ -239,25 +258,54 @@ body {
   box-shadow: 0 15px 40px rgba(0,0,0,0.1);
   text-align: center;
   border: 1px solid #e1e1e8;
+  position: relative;
+}
+
+.close-modal {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: none;
+  border: none;
+  font-size: 20px;
+  color: #8E8E93;
+  cursor: pointer;
 }
 
 .modal-img {
   width: 100%;
-  max-height: 200px; /* ОГРАНИЧЕНИЕ ВЫСОТЫ */
+  height: 200px; /* Жестко ограничиваем высоту */
   overflow: hidden;
   border-radius: 15px;
   margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 80px;
 }
 
 .modal-img img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain; /* Чтобы картинка не обрезалась */
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain; /* Картинка аккуратно впишется в квадрат 200х200 */
 }
 
 /* --- 8. Уведомление --- */
 .toast {
+  position: fixed;
+  top: -100px;
+  left: 50%;
+  transform: translateX(-50%);
   background-color: #F3D067;
   color: #4A3A00;
+  padding: 12px 24px;
+  border-radius: 30px;
+  font-weight: bold;
   box-shadow: 0 5px 15px rgba(243, 208, 103, 0.3);
+  transition: top 0.4s ease;
+  z-index: 2000;
+}
+
+.toast.show {
+  top: 20px;
 }
