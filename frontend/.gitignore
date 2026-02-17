@@ -1,30 +1,35 @@
-# Logs
-logs
-*.log
+# ==============================
+# СЕКРЕТЫ И КЛЮЧИ (САМОЕ ВАЖНОЕ)
+# ==============================
+.env
+*.env
+.env.*
+
+# ==============================
+# ПАПКИ PYTHON И БОТА
+# ==============================
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+env/
+.venv/
+.pytest_cache/
+
+# ==============================
+# ПАПКИ REACT И NODE.JS (Frontend)
+# ==============================
+frontend/node_modules/
+frontend/dist/
+frontend/dist-ssr/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-pnpm-debug.log*
-lerna-debug.log*
 
-node_modules
-dist
-dist-ssr
-*.local
-
-# Editor directories and files
-.vscode/*
-!.vscode/extensions.json
-.idea
+# ==============================
+# СИСТЕМНЫЕ ФАЙЛЫ И НАСТРОЙКИ РЕДАКТОРОВ
+# ==============================
+.vscode/
+.idea/
 .DS_Store
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
-
-node_modules
-.env
-dist
-
-.env
+Thumbs.db

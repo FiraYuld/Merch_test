@@ -1,6 +1,6 @@
 /* --- 1. Глобальные настройки --- */
 body {
-  background-color: #ffffff; /* Чистый белый фон для самого сайта */
+  background-color: #ffffff; 
   color: #2D2D32; 
   font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   margin: 0;
@@ -26,11 +26,11 @@ body {
 .header h1 {
   font-size: 22px;
   margin: 0;
-  color: #D8548C; /* Розовый Guazi */
+  color: #D8548C; 
 }
 
 .cart-btn {
-  background-color: #F3D067; /* Золотой */
+  background-color: #F3D067; 
   color: #4A3A00;
   border: none;
   padding: 10px 16px;
@@ -49,7 +49,6 @@ body {
   margin-bottom: 20px;
   scrollbar-width: none;
 }
-
 .filters::-webkit-scrollbar { display: none; }
 
 .filter-btn {
@@ -62,33 +61,31 @@ body {
   white-space: nowrap;
   font-weight: 600;
 }
-
 .filter-btn.active {
   background-color: #D8548C;
   color: #ffffff;
   border-color: #D8548C;
 }
 
-/* --- 4. Каталог и Карточки (Сетка 2х2) --- */
+/* --- 4. Каталог и Карточки --- */
 .catalog {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 12px;
-  align-items: stretch; /* Карточки в одном ряду будут одинаковой высоты */
+  align-items: stretch; 
 }
 
 .product-card {
-  background-color: #f4f4f7; /* Сероватый фон карточки (темнее сайта) */
+  background-color: #f4f4f7; 
   border-radius: 20px;
   padding: 12px;
   display: flex;
   flex-direction: column;
   border: 1px solid #e1e1e8;
-  height: 100%; /* Карточка занимает всю высоту выделенной ей ячейки */
+  height: 100%; 
   box-sizing: border-box;
 }
 
-/* СЕКРЕТ ВЫРАВНИВАНИЯ: Эта зона занимает всё пустое пространство */
 .clickable-area {
   display: flex;
   flex-direction: column;
@@ -135,7 +132,6 @@ body {
   overflow: hidden;
 }
 
-/* Так как clickable-area выросла, эта зона всегда прижата к низу */
 .card-bottom {
   display: flex;
   justify-content: space-between;
@@ -146,25 +142,27 @@ body {
 .product-price {
   font-size: 16px;
   font-weight: 800;
-  color: #5482d8; /* ОСТАВЛЕН ТВОЙ СИНИЙ ЦВЕТ */
+  color: #5482d8; 
 }
 
+/* Стили белого плюсика */
 .buy-btn-small {
   background-color: #D8548C;
-  color: #ffffff !important; /* Строго белый плюсик */
+  color: #ffffff; 
   border: none;
   width: 36px;
   height: 36px;
   border-radius: 12px;
-  font-size: 20px;
-  font-weight: bold;
+  font-size: 26px; /* Размер текстового плюса */
+  font-weight: 400;
+  line-height: 1; /* Чтобы плюс был ровно по центру */
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-/* --- 5. Экран Корзины --- */
+/* --- 5. Экран Корзины (Добавлены стили) --- */
 .cart-item {
   background-color: #f4f4f7;
   border: 1px solid #e1e1e8;
@@ -189,10 +187,49 @@ body {
   font-size: 25px;
 }
 
-.cart-item-img img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+.cart-item-img img { width: 100%; height: 100%; object-fit: cover; }
+
+.cart-item-info {
+  flex-grow: 1;
+}
+
+.cart-item-info h4 {
+  margin: 0 0 8px 0;
+  font-size: 14px;
+  color: #1a1b21;
+}
+
+.quantity-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Дизайн кнопок количества в корзине */
+.qty-btn {
+  background-color: #ffffff;
+  border: 1px solid #e1e1e8;
+  color: #2D2D32;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.qty-text {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.cart-item-total {
+  font-size: 16px;
+  font-weight: bold;
+  color: #5482d8;
+  white-space: nowrap;
 }
 
 /* --- 6. Форма и Итоги --- */
@@ -237,7 +274,7 @@ body {
   color: #8E8E93;
 }
 
-/* --- 7. Модальное окно --- */
+/* --- 7. Модальное окно (Добавлен дизайн) --- */
 .modal-overlay {
   background-color: rgba(255, 255, 255, 0.8);
   backdrop-filter: blur(10px);
@@ -253,7 +290,7 @@ body {
   background-color: #ffffff;
   width: 90%;
   max-width: 350px;
-  padding: 20px;
+  padding: 25px;
   border-radius: 25px;
   box-shadow: 0 15px 40px rgba(0,0,0,0.1);
   text-align: center;
@@ -267,17 +304,18 @@ body {
   right: 15px;
   background: none;
   border: none;
-  font-size: 20px;
+  font-size: 30px;
+  line-height: 1;
   color: #8E8E93;
   cursor: pointer;
 }
 
 .modal-img {
   width: 100%;
-  height: 200px; /* Жестко ограничиваем высоту */
+  height: 200px;
   overflow: hidden;
   border-radius: 15px;
-  margin-bottom: 15px;
+  margin-bottom: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -287,7 +325,89 @@ body {
 .modal-img img {
   max-width: 100%;
   max-height: 100%;
-  object-fit: contain; /* Картинка аккуратно впишется в квадрат 200х200 */
+  object-fit: contain; 
+}
+
+.modal-content h2 {
+  margin: 0 0 5px 0;
+  font-size: 20px;
+}
+
+.modal-game {
+  font-size: 11px;
+  color: #D8548C;
+  text-transform: uppercase;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+.modal-desc {
+  font-size: 14px;
+  color: #6a6a7a;
+  margin-bottom: 20px;
+  line-height: 1.4;
+}
+
+.modal-price {
+  font-size: 24px;
+  font-weight: bold;
+  color: #5482d8;
+  margin-bottom: 20px;
+}
+
+/* =========================================
+   СТИЛИ ДЛЯ КНОПОК В МОДАЛЬНОМ ОКНЕ
+========================================= */
+
+/* Контейнер для ряда кнопок */
+.modal-buttons-row {
+  display: flex;    /* Включаем гибкое выравнивание */
+  gap: 12px;        /* Расстояние между кнопками */
+  width: 100%;      /* Контейнер на всю ширину */
+  margin-top: auto; /* Прижимаем к низу, если контента мало */
+}
+
+/* 1. Кнопка "ℹ️ О товаре" (Серая) */
+.modal-info-btn {
+  flex: 1; /* МАГИЯ: Занимает 1 долю пространства */
+  background-color: #f4f4f7; /* Цвет фона как у карточек */
+  color: #2D2D32;            /* Темно-серый текст */
+  border: 1px solid #e1e1e8; /* Тонкая рамка для четкости */
+  padding: 14px;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s, transform 0.1s;
+}
+
+.modal-info-btn:active {
+  background-color: #e1e1e8; /* Чуть темнее при нажатии */
+  transform: scale(0.98);    /* Легкий эффект нажатия */
+}
+
+/* 2. Кнопка "+ В корзину" (Розовая) */
+.modal-buy-btn {
+  flex: 1; /* МАГИЯ: Тоже занимает 1 долю. Если она одна — займет всё. */
+  background-color: #D8548C;
+  color: white;
+  border: none;
+  padding: 14px;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.1s;
+}
+
+.modal-buy-btn:active {
+  transform: scale(0.98); /* Легкий эффект нажатия */
 }
 
 /* --- 8. Уведомление --- */
@@ -305,7 +425,4 @@ body {
   transition: top 0.4s ease;
   z-index: 2000;
 }
-
-.toast.show {
-  top: 20px;
-}
+.toast.show { top: 20px; }
