@@ -23,6 +23,19 @@ body {
   margin-bottom: 20px;
 }
 
+.logo-container {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.app-logo {
+    width: 45px;
+    height: 45px;
+    border-radius: 12px;
+    object-fit: cover;
+}
+
 .header h1 {
   font-size: 22px;
   margin: 0;
@@ -37,16 +50,22 @@ body {
   border-radius: 12px;
   font-weight: bold;
   cursor: pointer;
-  transition: transform 0.1s;
 }
 
-/* --- 3. Фильтры --- */
+/* --- 3. Фильтры и Сортировка --- */
+/* Контейнер для фильтров и сортировки, чтобы они были аккуратными */
+.filters-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
 .filters {
   display: flex;
   gap: 10px;
   overflow-x: auto;
-  padding-bottom: 15px;
-  margin-bottom: 20px;
+  padding-bottom: 5px;
   scrollbar-width: none;
 }
 .filters::-webkit-scrollbar { display: none; }
@@ -67,7 +86,26 @@ body {
   border-color: #D8548C;
 }
 
-/* --- 4. Каталог и Карточки --- */
+/* Стили для Select (Сортировка) */
+.sort-select {
+    width: 100%;
+    padding: 10px 15px;
+    border-radius: 15px;
+    border: 1px solid #e1e1e8;
+    background-color: #f4f4f7;
+    color: #2D2D32;
+    font-size: 14px;
+    font-weight: 600;
+    outline: none;
+    -webkit-appearance: none; /* Убирает стандартную стрелку iOS */
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23D8548C%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+    background-repeat: no-repeat;
+    background-position: right 15px top 50%;
+    background-size: 10px auto;
+}
+
+/* --- 4. Каталог --- */
 .catalog {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -106,11 +144,7 @@ body {
   font-size: 50px;
 }
 
-.product-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
+.product-image img { width: 100%; height: 100%; object-fit: cover; }
 
 .product-game {
   font-size: 9px;
@@ -145,7 +179,6 @@ body {
   color: #5482d8; 
 }
 
-/* Стили белого плюсика */
 .buy-btn-small {
   background-color: #D8548C;
   color: #ffffff; 
@@ -153,16 +186,23 @@ body {
   width: 36px;
   height: 36px;
   border-radius: 12px;
-  font-size: 26px; /* Размер текстового плюса */
+  font-size: 26px;
   font-weight: 400;
-  line-height: 1; /* Чтобы плюс был ровно по центру */
+  line-height: 1;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-/* --- 5. Экран Корзины (Добавлены стили) --- */
+.buy-btn-small.disabled-small {
+    background-color: #e1e1e8;
+    color: #8E8E93;
+    cursor: not-allowed;
+    font-size: 18px; 
+}
+
+/* --- 5. Корзина и Формы --- */
 .cart-item {
   background-color: #f4f4f7;
   border: 1px solid #e1e1e8;
@@ -173,256 +213,93 @@ body {
   gap: 12px;
   margin-bottom: 10px;
 }
-
 .cart-item-img {
-  width: 50px;
-  height: 50px;
-  border-radius: 10px;
-  overflow: hidden;
-  flex-shrink: 0;
-  background-color: #ffffff;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 25px;
+  width: 50px; height: 50px; border-radius: 10px; overflow: hidden;
+  flex-shrink: 0; background-color: #ffffff;
+  display: flex; justify-content: center; align-items: center; font-size: 25px;
 }
-
 .cart-item-img img { width: 100%; height: 100%; object-fit: cover; }
-
-.cart-item-info {
-  flex-grow: 1;
-}
-
-.cart-item-info h4 {
-  margin: 0 0 8px 0;
-  font-size: 14px;
-  color: #1a1b21;
-}
-
-.quantity-controls {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-/* Дизайн кнопок количества в корзине */
+.cart-item-info { flex-grow: 1; }
+.cart-item-info h4 { margin: 0 0 8px 0; font-size: 14px; color: #1a1b21; }
+.quantity-controls { display: flex; align-items: center; gap: 12px; }
 .qty-btn {
-  background-color: #ffffff;
-  border: 1px solid #e1e1e8;
-  color: #2D2D32;
-  width: 28px;
-  height: 28px;
-  border-radius: 8px;
-  font-size: 20px;
+  background-color: #ffffff; border: 1px solid #e1e1e8; color: #2D2D32;
+  width: 28px; height: 28px; border-radius: 8px; font-size: 20px;
+  display: flex; align-items: center; justify-content: center; cursor: pointer;
+}
+.qty-text { font-size: 14px; font-weight: 600; }
+.cart-item-total { font-size: 16px; font-weight: bold; color: #5482d8; white-space: nowrap; }
+
+/* --- Секция Промокодов (Исправленная) --- */
+.promo-section {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
+  gap: 8px; /* Чуть уменьшил отступ, чтобы всё влезало */
+  margin-bottom: 20px;
+  align-items: stretch; /* Растягиваем элементы по высоте одинаково */
 }
 
-.qty-text {
-  font-size: 14px;
-  font-weight: 600;
-}
-
-.cart-item-total {
-  font-size: 16px;
-  font-weight: bold;
-  color: #5482d8;
-  white-space: nowrap;
-}
-
-/* --- 6. Форма и Итоги --- */
-.user-form {
-  background-color: #f4f4f7;
-  border: 1px solid #D8548C;
-  padding: 15px;
-  border-radius: 18px;
-  margin: 20px 0;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.user-form input {
+.promo-section input {
+  flex: 1; /* Занимает всё свободное место */
+  min-width: 0; /* ВАЖНО: Позволяет инпуту сжиматься, если места мало */
   padding: 12px;
-  border-radius: 10px;
+  border-radius: 12px;
   border: 1px solid #e1e1e8;
   outline: none;
-}
-
-.cart-summary {
   background-color: #f4f4f7;
-  border: 2px solid #F3D067;
-  padding: 20px;
-  border-radius: 20px;
+  font-size: 16px; /* Защита от зума на iOS */
 }
 
-.checkout-btn {
-  background-color: #D8548C;
+.promo-section button {
+  flex-shrink: 0; /* ВАЖНО: Запрещаем кнопке сжиматься/ломаться */
+  background-color: #2D2D32;
   color: white;
   border: none;
-  padding: 15px;
-  width: 100%;
+  padding: 0 16px; /* Чуть компактнее по бокам */
   border-radius: 12px;
   font-weight: bold;
-  font-size: 16px;
-}
-
-.checkout-btn.disabled {
-  background-color: #e1e1e8;
-  color: #8E8E93;
-}
-
-/* --- 7. Модальное окно (Добавлен дизайн) --- */
-.modal-overlay {
-  background-color: rgba(255, 255, 255, 0.8);
-  backdrop-filter: blur(10px);
-  position: fixed;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-}
-
-.modal-content {
-  background-color: #ffffff;
-  width: 90%;
-  max-width: 350px;
-  padding: 25px;
-  border-radius: 25px;
-  box-shadow: 0 15px 40px rgba(0,0,0,0.1);
-  text-align: center;
-  border: 1px solid #e1e1e8;
-  position: relative;
-}
-
-.close-modal {
-  position: absolute;
-  top: 15px;
-  right: 15px;
-  background: none;
-  border: none;
-  font-size: 30px;
-  line-height: 1;
-  color: #8E8E93;
   cursor: pointer;
+  white-space: nowrap; /* Текст всегда в одну строку */
+  font-size: 14px; /* Аккуратный размер шрифта */
 }
 
-.modal-img {
-  width: 100%;
-  height: 200px;
-  overflow: hidden;
-  border-radius: 15px;
-  margin-bottom: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 80px;
-}
+.user-form { background-color: #f4f4f7; border: 1px solid #D8548C; padding: 15px; border-radius: 18px; margin: 20px 0; display: flex; flex-direction: column; gap: 10px; }
 
-.modal-img img {
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: contain; 
+/* ВАЖНО: font-size 16px предотвращает зум на iPhone! */
+.user-form input, .user-form textarea { 
+    padding: 12px; 
+    border-radius: 10px; 
+    border: 1px solid #e1e1e8; 
+    outline: none; 
+    font-family: inherit;
+    font-size: 16px; /* <-- ЛЕКАРСТВО ОТ ЗУМА */
 }
+.comment-input { resize: none; height: 60px; }
 
-.modal-content h2 {
-  margin: 0 0 5px 0;
-  font-size: 20px;
-}
+.cart-summary { background-color: #f4f4f7; border: 2px solid #F3D067; padding: 20px; border-radius: 20px; }
+.summary-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 14px; }
+.summary-row.discount { color: #D8548C; font-weight: bold; }
+.checkout-btn { background-color: #D8548C; color: white; border: none; padding: 15px; width: 100%; border-radius: 12px; font-weight: bold; font-size: 16px; margin-top: 10px; }
+.checkout-btn.disabled { background-color: #e1e1e8; color: #8E8E93; }
+.min-order-warning { background-color: #ffebee; color: #c62828; padding: 10px; border-radius: 10px; font-size: 13px; text-align: center; margin-bottom: 10px; border: 1px solid #ef9a9a; }
+.terms-text { font-size: 11px; color: #8E8E93; text-align: center; margin-top: 12px; line-height: 1.4; }
+.terms-text span { color: #D8548C; text-decoration: underline; cursor: pointer; }
 
-.modal-game {
-  font-size: 11px;
-  color: #D8548C;
-  text-transform: uppercase;
-  font-weight: bold;
-  margin-bottom: 15px;
-}
+/* --- Модальное окно --- */
+.modal-overlay { background-color: rgba(255, 255, 255, 0.8); backdrop-filter: blur(10px); position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; z-index: 1000; }
+.modal-content { background-color: #ffffff; width: 90%; max-width: 350px; padding: 25px; border-radius: 25px; box-shadow: 0 15px 40px rgba(0,0,0,0.1); text-align: center; border: 1px solid #e1e1e8; position: relative; }
+.close-modal { position: absolute; top: 15px; right: 15px; background: none; border: none; font-size: 30px; line-height: 1; color: #8E8E93; cursor: pointer; }
+.modal-img { width: 100%; height: 200px; overflow: hidden; border-radius: 15px; margin-bottom: 20px; display: flex; align-items: center; justify-content: center; font-size: 80px; }
+.modal-img img { max-width: 100%; max-height: 100%; object-fit: contain; }
+.modal-content h2 { margin: 0 0 5px 0; font-size: 20px; }
+.modal-game { font-size: 11px; color: #D8548C; text-transform: uppercase; font-weight: bold; margin-bottom: 15px; }
+.modal-desc { font-size: 14px; color: #6a6a7a; margin-bottom: 20px; line-height: 1.4; }
+.modal-price { font-size: 24px; font-weight: bold; color: #5482d8; margin-bottom: 20px; }
 
-.modal-desc {
-  font-size: 14px;
-  color: #6a6a7a;
-  margin-bottom: 20px;
-  line-height: 1.4;
-}
+.modal-buttons-row { display: flex; gap: 12px; width: 100%; margin-top: auto; }
+.modal-info-btn { flex: 1; background-color: #f4f4f7; color: #2D2D32; border: 1px solid #e1e1e8; padding: 14px; border-radius: 12px; font-size: 15px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+.modal-buy-btn { flex: 1; background-color: #D8548C; color: white; border: none; padding: 14px; border-radius: 12px; font-size: 16px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+.modal-buy-btn.disabled-btn { background-color: #e1e1e8; color: #8E8E93; cursor: not-allowed; }
 
-.modal-price {
-  font-size: 24px;
-  font-weight: bold;
-  color: #5482d8;
-  margin-bottom: 20px;
-}
-
-/* =========================================
-   СТИЛИ ДЛЯ КНОПОК В МОДАЛЬНОМ ОКНЕ
-========================================= */
-
-/* Контейнер для ряда кнопок */
-.modal-buttons-row {
-  display: flex;    /* Включаем гибкое выравнивание */
-  gap: 12px;        /* Расстояние между кнопками */
-  width: 100%;      /* Контейнер на всю ширину */
-  margin-top: auto; /* Прижимаем к низу, если контента мало */
-}
-
-/* 1. Кнопка "ℹ️ О товаре" (Серая) */
-.modal-info-btn {
-  flex: 1; /* МАГИЯ: Занимает 1 долю пространства */
-  background-color: #f4f4f7; /* Цвет фона как у карточек */
-  color: #2D2D32;            /* Темно-серый текст */
-  border: 1px solid #e1e1e8; /* Тонкая рамка для четкости */
-  padding: 14px;
-  border-radius: 12px;
-  font-size: 15px;
-  font-weight: 600;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background-color 0.2s, transform 0.1s;
-}
-
-.modal-info-btn:active {
-  background-color: #e1e1e8; /* Чуть темнее при нажатии */
-  transform: scale(0.98);    /* Легкий эффект нажатия */
-}
-
-/* 2. Кнопка "+ В корзину" (Розовая) */
-.modal-buy-btn {
-  flex: 1; /* МАГИЯ: Тоже занимает 1 долю. Если она одна — займет всё. */
-  background-color: #D8548C;
-  color: white;
-  border: none;
-  padding: 14px;
-  border-radius: 12px;
-  font-size: 16px;
-  font-weight: bold;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: transform 0.1s;
-}
-
-.modal-buy-btn:active {
-  transform: scale(0.98); /* Легкий эффект нажатия */
-}
-
-/* --- 8. Уведомление --- */
-.toast {
-  position: fixed;
-  top: -100px;
-  left: 50%;
-  transform: translateX(-50%);
-  background-color: #F3D067;
-  color: #4A3A00;
-  padding: 12px 24px;
-  border-radius: 30px;
-  font-weight: bold;
-  box-shadow: 0 5px 15px rgba(243, 208, 103, 0.3);
-  transition: top 0.4s ease;
-  z-index: 2000;
-}
+/* Уведомление */
+.toast { position: fixed; top: -100px; left: 50%; transform: translateX(-50%); background-color: #F3D067; color: #4A3A00; padding: 12px 24px; border-radius: 30px; font-weight: bold; box-shadow: 0 5px 15px rgba(243, 208, 103, 0.3); transition: top 0.4s ease; z-index: 2000; }
 .toast.show { top: 20px; }

@@ -1,6 +1,17 @@
 import { useState, useEffect } from 'react';
 import './App.css';
 import { products, categories } from './products';
+import { IMAGES } from './images';
+
+// === НАСТРОЙКИ ===
+const PROMO_CODES = {
+  "СОННЫЙ": 0.02,
+  "SHEEP": 0.05,
+  "GUAZI": 0.10
+};
+
+const TERMS_LINK = "https://t.me/durov"; 
+const MIN_ORDER_AMOUNT = 1500; 
 
 function App() {
   const [cart, setCart] = useState([]); 
@@ -9,6 +20,12 @@ function App() {
   const [selectedProduct, setSelectedProduct] = useState(null); 
   const [toast, setToast] = useState(""); 
 
+  // Состояния для сортировки и промо
+  const [sortOrder, setSortOrder] = useState("default"); // 'default', 'asc', 'desc'
+  const [promoInput, setPromoInput] = useState(""); 
+  const [appliedPromo, setAppliedPromo] = useState(null); 
+  const [discountPercent, setDiscountPercent] = useState(0); 
+  const [orderComment, setOrderComment] = useState(""); 
   const [userData, setUserData] = useState({ name: '', phone: '', city: '' });
 
   useEffect(() => {
@@ -23,6 +40,10 @@ function App() {
   };
 
   const addToCart = (product) => {
+    if (product.isAvailable === false) {
+      showToast("❌ Товар временно недоступен");
+      return;
+    }
     setCart((prevCart) => {
       const existingItem = prevCart.find(item => item.id === product.id);
       if (existingItem) {
@@ -54,38 +75,84 @@ function App() {
     setUserData(prev => ({ ...prev, [name]: value }));
   };
 
-  // Функция для открытия ссылки в ТГ
-  const openInfoLink = (link) => {
-    if (window.Telegram?.WebApp?.openTelegramLink) {
-      window.Telegram.WebApp.openTelegramLink(link); // Нативно в ТГ
+  const handleApplyPromo = () => {
+    const code = promoInput.trim().toUpperCase();
+    if (PROMO_CODES[code]) {
+      setAppliedPromo(code);
+      setDiscountPercent(PROMO_CODES[code]);
+      showToast(`🎉 Промокод ${code} применен!`);
     } else {
-      window.open(link, '_blank'); // Если открыто в браузере
+      showToast("❌ Неверный промокод");
+      setAppliedPromo(null);
+      setDiscountPercent(0);
     }
   };
 
-  const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+  const openInfoLink = (link) => {
+    if (window.Telegram?.WebApp?.openTelegramLink) {
+      window.Telegram.WebApp.openTelegramLink(link);
+    } else {
+      window.open(link, '_blank');
+    }
+  };
+
+  // --- ЛОГИКА СОРТИРОВКИ ---
+  const getSortedProducts = () => {
+    // Сначала фильтруем по категории
+    let filtered = activeCategory === "Все" 
+      ? products 
+      : products.filter(product => product.game === activeCategory);
+
+    // Потом сортируем копию массива
+    const sorted = [...filtered]; 
+
+    if (sortOrder === "asc") {
+      return sorted.sort((a, b) => a.price - b.price); // От дешевых
+    } else if (sortOrder === "desc") {
+      return sorted.sort((a, b) => b.price - a.price); // От дорогих
+    }
+    
+    return sorted; // По умолчанию (как в файле)
+  };
+
+  const displayedProducts = getSortedProducts();
+
+  // Расчеты
+  const subtotalPrice = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+  const discountAmount = Math.floor(subtotalPrice * discountPercent);
+  const totalPrice = subtotalPrice - discountAmount;
   const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-  const isFormValid = userData.name.trim() && userData.phone.trim() && userData.city.trim() && cart.length > 0;
+
+  const isMinOrderReached = totalPrice >= MIN_ORDER_AMOUNT;
+  const isFormValid = userData.name.trim() && userData.phone.trim() && userData.city.trim() && cart.length > 0 && isMinOrderReached;
 
   const handleCheckout = () => {
-    const orderData = { items: cart, totalPrice, user: userData };
+    const orderData = { 
+      items: cart, 
+      subtotal: subtotalPrice,
+      discount: discountAmount,
+      totalPrice: totalPrice, 
+      promo: appliedPromo,
+      comment: orderComment,
+      user: userData 
+    };
+
     if (window.Telegram?.WebApp?.sendData) {
       window.Telegram.WebApp.sendData(JSON.stringify(orderData));
     } else {
-      alert(`Заказ оформлен!\nИмя: ${userData.name}\nИтого: ${totalPrice} ₽`);
+      alert(`Заказ оформлен!\nИтог: ${totalPrice} ₽`);
     }
   };
-
-  const filteredProducts = activeCategory === "Все" 
-    ? products 
-    : products.filter(product => product.game === activeCategory);
 
   return (
     <div className="app-container">
       <div className={`toast ${toast ? 'show' : ''}`}>{toast}</div>
 
       <header className="header">
-        <h1>🐑 Sheep 2 Me</h1>
+        <div className="logo-container">
+            <img src={IMAGES.logo} alt="Logo" className="app-logo" />
+            <h1>Sheep To Me</h1>
+        </div>
         <button className="cart-btn" onClick={() => setIsCartOpen(!isCartOpen)}>
           {isCartOpen ? "Закрыть" : `🛒 Корзина (${totalItems})`}
         </button>
@@ -97,7 +164,7 @@ function App() {
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <button className="close-modal" onClick={() => setSelectedProduct(null)}>×</button>
             <div className="modal-img">
-              {selectedProduct.img && selectedProduct.img.length > 2 ? (
+              {selectedProduct.img && typeof selectedProduct.img === 'string' && selectedProduct.img.length > 5 ? (
                 <img src={selectedProduct.img} alt={selectedProduct.name} />
               ) : (
                 selectedProduct.img
@@ -108,29 +175,29 @@ function App() {
             <p className="modal-desc">{selectedProduct.desc}</p>
             <div className="modal-price">{selectedProduct.price} ₽</div>
             
-            {/* Ряд с кнопками */}
             <div className="modal-buttons-row">
               {selectedProduct.tgLink && (
-                <button 
-                  className="modal-info-btn" 
-                  onClick={() => openInfoLink(selectedProduct.tgLink)}
-                >
+                <button className="modal-info-btn" onClick={() => openInfoLink(selectedProduct.tgLink)}>
                   ℹ️ О товаре
                 </button>
               )}
-              <button className="modal-buy-btn" onClick={() => { 
-                addToCart(selectedProduct); 
-                setSelectedProduct(null); 
-              }}>
-                + В корзину
+              <button 
+                className={`modal-buy-btn ${selectedProduct.isAvailable === false ? 'disabled-btn' : ''}`} 
+                onClick={() => { 
+                    if(selectedProduct.isAvailable !== false) {
+                        addToCart(selectedProduct); 
+                        setSelectedProduct(null); 
+                    }
+                }}
+                disabled={selectedProduct.isAvailable === false}
+              >
+                {selectedProduct.isAvailable === false ? "Нет в наличии" : "+ В корзину"}
               </button>
             </div>
-
           </div>
         </div>
       )}
 
-      {/* Корзина и Каталог */}
       {isCartOpen ? (
         <div className="cart-view">
           <h2>Оформление заказа</h2>
@@ -142,7 +209,7 @@ function App() {
                 {cart.map((item) => (
                   <div key={item.id} className="cart-item">
                     <div className="cart-item-img">
-                      {item.img && item.img.length > 2 ? <img src={item.img} alt={item.name} /> : item.img}
+                      {item.img && typeof item.img === 'string' && item.img.length > 5 ? <img src={item.img} alt={item.name} /> : item.img}
                     </div>
                     <div className="cart-item-info">
                       <h4>{item.name}</h4>
@@ -157,15 +224,42 @@ function App() {
                 ))}
               </div>
 
+              <div className="promo-section">
+                <input 
+                  type="text" 
+                  placeholder="Промокод" 
+                  value={promoInput}
+                  onChange={(e) => setPromoInput(e.target.value)}
+                />
+                <button onClick={handleApplyPromo}>Применить</button>
+              </div>
+
               <div className="user-form">
                 <h3>Данные получателя</h3>
                 <input type="text" name="name" placeholder="ФИО" value={userData.name} onChange={handleInputChange} />
                 <input type="tel" name="phone" placeholder="Номер телефона" value={userData.phone} onChange={handleInputChange} />
                 <input type="text" name="city" placeholder="Город доставки" value={userData.city} onChange={handleInputChange} />
+                <textarea 
+                  className="comment-input"
+                  placeholder="Комментарий к заказу (необязательно)"
+                  value={orderComment}
+                  onChange={(e) => setOrderComment(e.target.value)}
+                />
               </div>
 
               <div className="cart-summary">
+                {appliedPromo && (
+                  <div className="summary-row discount">
+                    <span>Скидка ({appliedPromo}):</span>
+                    <span>- {discountAmount} ₽</span>
+                  </div>
+                )}
                 <h3>Итого: <span>{totalPrice} ₽</span></h3>
+                {!isMinOrderReached && (
+                  <div className="min-order-warning">
+                    ⚠️ Минимальная сумма заказа: {MIN_ORDER_AMOUNT} ₽
+                  </div>
+                )}
                 <button 
                   className={`checkout-btn ${!isFormValid ? 'disabled' : ''}`} 
                   onClick={handleCheckout}
@@ -173,30 +267,53 @@ function App() {
                 >
                   {isFormValid ? "🚀 Подтвердить заказ" : "Заполните все поля"}
                 </button>
+                <p className="terms-text">
+                  Нажимая кнопку, вы соглашаетесь с <span onClick={() => openInfoLink(TERMS_LINK)}>условиями использования</span>
+                </p>
               </div>
             </>
           )}
         </div>
       ) : (
         <>
-          <div className="filters">
-            {categories.map(cat => (
-              <button 
-                key={cat} 
-                className={`filter-btn ${activeCategory === cat ? 'active' : ''}`} 
-                onClick={() => setActiveCategory(cat)}
-              >
-                {cat}
-              </button>
-            ))}
+          {/* СОРТИРОВКА И ФИЛЬТРЫ */}
+          <div className="filters-container">
+            <div className="filters">
+                {categories.map(cat => (
+                <button 
+                    key={cat} 
+                    className={`filter-btn ${activeCategory === cat ? 'active' : ''}`} 
+                    onClick={() => setActiveCategory(cat)}
+                >
+                    {cat}
+                </button>
+                ))}
+            </div>
+            
+            {/* Выпадающий список сортировки */}
+            <div className="sort-wrapper">
+                <select 
+                    className="sort-select" 
+                    value={sortOrder} 
+                    onChange={(e) => setSortOrder(e.target.value)}
+                >
+                    <option value="default">Сортировка</option>
+                    <option value="asc">Сначала дешевые</option>
+                    <option value="desc">Сначала дорогие</option>
+                </select>
+            </div>
           </div>
 
           <div className="catalog">
-            {filteredProducts.map((product) => (
+            {displayedProducts.map((product) => (
               <div key={product.id} className="product-card">
                 <div className="clickable-area" onClick={() => setSelectedProduct(product)}>
                   <div className="product-image">
-                    {product.img && product.img.length > 2 ? <img src={product.img} alt={product.name} /> : product.img}
+                    {product.img && typeof product.img === 'string' && product.img.length > 5 ? (
+                        <img src={product.img} alt={product.name} /> 
+                    ) : (
+                        product.img
+                    )}
                   </div>
                   <div className="product-game">{product.game}</div>
                   <h3 className="product-name">{product.name}</h3>
@@ -204,7 +321,16 @@ function App() {
                 
                 <div className="card-bottom">
                   <div className="product-price">{product.price} ₽</div>
-                  <button className="buy-btn-small" onClick={() => addToCart(product)}>+</button>
+                  <button 
+                    className={`buy-btn-small ${product.isAvailable === false ? 'disabled-small' : ''}`} 
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        if(product.isAvailable !== false) addToCart(product);
+                    }}
+                    disabled={product.isAvailable === false}
+                  >
+                    {product.isAvailable === false ? "🚫" : "+"}
+                  </button>
                 </div>
               </div>
             ))}
