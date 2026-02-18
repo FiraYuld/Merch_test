@@ -53,7 +53,6 @@ body {
 }
 
 /* --- 3. Фильтры и Сортировка --- */
-/* Контейнер для фильтров и сортировки, чтобы они были аккуратными */
 .filters-container {
     display: flex;
     flex-direction: column;
@@ -86,7 +85,6 @@ body {
   border-color: #D8548C;
 }
 
-/* Стили для Select (Сортировка) */
 .sort-select {
     width: 100%;
     padding: 10px 15px;
@@ -97,7 +95,7 @@ body {
     font-size: 14px;
     font-weight: 600;
     outline: none;
-    -webkit-appearance: none; /* Убирает стандартную стрелку iOS */
+    -webkit-appearance: none; 
     appearance: none;
     background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23D8548C%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
     background-repeat: no-repeat;
@@ -230,48 +228,46 @@ body {
 .qty-text { font-size: 14px; font-weight: 600; }
 .cart-item-total { font-size: 16px; font-weight: bold; color: #5482d8; white-space: nowrap; }
 
-/* --- Секция Промокодов (Исправленная) --- */
 .promo-section {
   display: flex;
-  gap: 8px; /* Чуть уменьшил отступ, чтобы всё влезало */
+  gap: 8px;
   margin-bottom: 20px;
-  align-items: stretch; /* Растягиваем элементы по высоте одинаково */
+  align-items: stretch;
 }
 
 .promo-section input {
-  flex: 1; /* Занимает всё свободное место */
-  min-width: 0; /* ВАЖНО: Позволяет инпуту сжиматься, если места мало */
+  flex: 1;
+  min-width: 0;
   padding: 12px;
   border-radius: 12px;
   border: 1px solid #e1e1e8;
   outline: none;
   background-color: #f4f4f7;
-  font-size: 16px; /* Защита от зума на iOS */
+  font-size: 16px;
 }
 
 .promo-section button {
-  flex-shrink: 0; /* ВАЖНО: Запрещаем кнопке сжиматься/ломаться */
+  flex-shrink: 0;
   background-color: #2D2D32;
   color: white;
   border: none;
-  padding: 0 16px; /* Чуть компактнее по бокам */
+  padding: 0 16px;
   border-radius: 12px;
   font-weight: bold;
   cursor: pointer;
-  white-space: nowrap; /* Текст всегда в одну строку */
-  font-size: 14px; /* Аккуратный размер шрифта */
+  white-space: nowrap;
+  font-size: 14px;
 }
 
 .user-form { background-color: #f4f4f7; border: 1px solid #D8548C; padding: 15px; border-radius: 18px; margin: 20px 0; display: flex; flex-direction: column; gap: 10px; }
 
-/* ВАЖНО: font-size 16px предотвращает зум на iPhone! */
 .user-form input, .user-form textarea { 
     padding: 12px; 
     border-radius: 10px; 
     border: 1px solid #e1e1e8; 
     outline: none; 
     font-family: inherit;
-    font-size: 16px; /* <-- ЛЕКАРСТВО ОТ ЗУМА */
+    font-size: 16px;
 }
 .comment-input { resize: none; height: 60px; }
 
@@ -303,3 +299,23 @@ body {
 /* Уведомление */
 .toast { position: fixed; top: -100px; left: 50%; transform: translateX(-50%); background-color: #F3D067; color: #4A3A00; padding: 12px 24px; border-radius: 30px; font-weight: bold; box-shadow: 0 5px 15px rgba(243, 208, 103, 0.3); transition: top 0.4s ease; z-index: 2000; }
 .toast.show { top: 20px; }
+
+/* === СТИЛИ ДЛЯ ОКНА 18+ === */
+.age-modal-overlay {
+    z-index: 2000; /* Поверх всего */
+    background-color: rgba(0, 0, 0, 0.8); /* Более темный фон для серьезности */
+}
+.age-modal-content {
+    border: 2px solid #D8548C; /* Розовая рамка */
+}
+.age-icon {
+    font-size: 60px;
+    margin-bottom: 10px;
+}
+.deny-btn {
+    background-color: #f4f4f7;
+    color: #8E8E93;
+}
+.confirm-btn {
+    background-color: #D8548C;
+}

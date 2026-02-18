@@ -3,7 +3,6 @@ import './App.css';
 import { products, categories } from './products';
 import { IMAGES } from './images';
 
-// === НАСТРОЙКИ ===
 const PROMO_CODES = {
   "СОННЫЙ": 0.02,
   "SHEEP": 0.05,
@@ -20,13 +19,17 @@ function App() {
   const [selectedProduct, setSelectedProduct] = useState(null); 
   const [toast, setToast] = useState(""); 
 
-  // Состояния для сортировки и промо
-  const [sortOrder, setSortOrder] = useState("default"); // 'default', 'asc', 'desc'
+  // Сортировка и промо
+  const [sortOrder, setSortOrder] = useState("default");
   const [promoInput, setPromoInput] = useState(""); 
   const [appliedPromo, setAppliedPromo] = useState(null); 
   const [discountPercent, setDiscountPercent] = useState(0); 
   const [orderComment, setOrderComment] = useState(""); 
   const [userData, setUserData] = useState({ name: '', phone: '', city: '' });
+
+  // === НОВЫЕ СОСТОЯНИЯ ДЛЯ 18+ ===
+  const [showAgeModal, setShowAgeModal] = useState(false); // Показ окна 18+
+  const [isAgeVerified, setIsAgeVerified] = useState(false); // Подтвердил ли юзер возраст
 
   useEffect(() => {
     if (window.Telegram?.WebApp) {
@@ -96,28 +99,55 @@ function App() {
     }
   };
 
-  // --- ЛОГИКА СОРТИРОВКИ ---
-  const getSortedProducts = () => {
-    // Сначала фильтруем по категории
-    let filtered = activeCategory === "Все" 
-      ? products 
-      : products.filter(product => product.game === activeCategory);
-
-    // Потом сортируем копию массива
-    const sorted = [...filtered]; 
-
-    if (sortOrder === "asc") {
-      return sorted.sort((a, b) => a.price - b.price); // От дешевых
-    } else if (sortOrder === "desc") {
-      return sorted.sort((a, b) => b.price - a.price); // От дорогих
+  // === ЛОГИКА ПЕРЕКЛЮЧЕНИЯ КАТЕГОРИЙ (с проверкой 18+) ===
+  const handleCategoryClick = (cat) => {
+    if (cat === "18+") {
+      if (isAgeVerified) {
+        setActiveCategory(cat); // Уже подтверждал - пускаем
+      } else {
+        setShowAgeModal(true); // Не подтверждал - показываем окно
+      }
+    } else {
+      setActiveCategory(cat); // Обычная категория
     }
+  };
+
+  // Подтверждение возраста
+  const confirmAge = () => {
+    setIsAgeVerified(true);
+    setShowAgeModal(false);
+    setActiveCategory("18+");
+    showToast("🔞 Доступ открыт");
+  };
+
+  const denyAge = () => {
+    setShowAgeModal(false);
+    // Остаемся на текущей категории
+  };
+
+  // --- ЛОГИКА СОРТИРОВКИ И ФИЛЬТРАЦИИ ---
+  const getSortedProducts = () => {
+    let filtered;
     
-    return sorted; // По умолчанию (как в файле)
+    // ВАЖНО: Если категория "Все", мы исключаем товары 18+
+    if (activeCategory === "Все") {
+      filtered = products.filter(product => product.game !== "18+");
+    } else {
+      // Иначе показываем товары только выбранной категории
+      filtered = products.filter(product => product.game === activeCategory);
+    }
+
+    const sorted = [...filtered]; 
+    if (sortOrder === "asc") {
+      return sorted.sort((a, b) => a.price - b.price);
+    } else if (sortOrder === "desc") {
+      return sorted.sort((a, b) => b.price - a.price);
+    }
+    return sorted;
   };
 
   const displayedProducts = getSortedProducts();
 
-  // Расчеты
   const subtotalPrice = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
   const discountAmount = Math.floor(subtotalPrice * discountPercent);
   const totalPrice = subtotalPrice - discountAmount;
@@ -158,7 +188,22 @@ function App() {
         </button>
       </header>
 
-      {/* Модальное окно */}
+      {/* === МОДАЛКА 18+ === */}
+      {showAgeModal && (
+        <div className="modal-overlay age-modal-overlay">
+          <div className="modal-content age-modal-content">
+            <div className="age-icon">🔞</div>
+            <h2>Вам есть 18 лет?</h2>
+            <p>Этот раздел содержит товары для взрослых. Пожалуйста, подтвердите ваш возраст.</p>
+            <div className="modal-buttons-row">
+              <button className="modal-info-btn deny-btn" onClick={denyAge}>Нет, назад</button>
+              <button className="modal-buy-btn confirm-btn" onClick={confirmAge}>Да, мне 18+</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Обычная модалка товара */}
       {selectedProduct && (
         <div className="modal-overlay" onClick={() => setSelectedProduct(null)}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
@@ -276,21 +321,22 @@ function App() {
         </div>
       ) : (
         <>
-          {/* СОРТИРОВКА И ФИЛЬТРЫ */}
           <div className="filters-container">
             <div className="filters">
                 {categories.map(cat => (
                 <button 
                     key={cat} 
+                    /* Здесь мы используем handleCategoryClick вместо setActiveCategory
+                       чтобы перехватить нажатие на 18+ 
+                    */
                     className={`filter-btn ${activeCategory === cat ? 'active' : ''}`} 
-                    onClick={() => setActiveCategory(cat)}
+                    onClick={() => handleCategoryClick(cat)} 
                 >
                     {cat}
                 </button>
                 ))}
             </div>
             
-            {/* Выпадающий список сортировки */}
             <div className="sort-wrapper">
                 <select 
                     className="sort-select" 
