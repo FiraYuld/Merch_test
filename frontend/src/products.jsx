@@ -192,7 +192,7 @@ export const products = [
     },
 
     {
-        id: 11,
+        id: 12,
         name: "Контроллер Светлячка",
         game: ["Honkai: Star Rail", "Другое"],
         price: 12500, 
@@ -218,7 +218,7 @@ export const products = [
     },
 
     {
-        id: 12,
+        id: 13,
         name: "Клавиатура Кафки",
         game: ["Honkai: Star Rail", "Другое"],
         price: 12500, 
@@ -243,7 +243,7 @@ export const products = [
     },
 
     {
-        id: 13,
+        id: 14,
         name: "Клавиатура Ахерон",
         game: ["Honkai: Star Rail", "Другое"],
         price: 12500, 
@@ -268,7 +268,7 @@ export const products = [
     },
 
     {
-        id: 14,
+        id: 15,
         name: "Клавиатура Бутхилла",
         game: ["Honkai: Star Rail", "Другое"],
         price: 9000, 
@@ -288,7 +288,7 @@ export const products = [
     },
 
     {
-        id: 15,
+        id: 16,
         name: "Сумка Ахерон",
         game: ["Honkai: Star Rail", "Другое"],
         price: 6500, 
@@ -305,7 +305,7 @@ export const products = [
     },
 
     {
-        id: 16,
+        id: 17,
         name: "Портфель Авантюрина",
         game: ["Honkai: Star Rail", "Другое"],
         price: 6500, 
@@ -322,7 +322,7 @@ export const products = [
     },
 
     {
-        id: 17,
+        id: 18,
         name: "Сумка Фэйсяо",
         game: ["Honkai: Star Rail", "Другое"],
         price: 6500, 
@@ -339,7 +339,7 @@ export const products = [
     },
 
     {
-        id: 18,
+        id: 19,
         name: "Портфель Кафки",
         game: ["Honkai: Star Rail", "Другое"],
         price: 6500, 
@@ -355,7 +355,7 @@ export const products = [
     },
 
     {
-        id: 19,
+        id: 20,
         name: "Рандом-бокс Химеры",
         game: ["Honkai: Star Rail", "Другое"],
         price: 1500, 
@@ -375,7 +375,7 @@ export const products = [
     },
 
     {
-        id: 20,
+        id: 21,
         name: "Плюшевые куклы",
         game: ["Honkai: Star Rail"],
         price: 6500, 
