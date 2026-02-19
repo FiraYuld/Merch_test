@@ -6,13 +6,17 @@ from aiogram import Bot, Dispatcher, types, F
 from aiogram.filters import CommandStart
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, WebAppInfo
 
-# Загружаем переменные окружения
+# Загружаем переменные из локального .env (если он есть)
 load_dotenv()
+
+# Читаем настройки из окружения
 TOKEN = os.getenv("BOT_TOKEN")
 MANAGER_ID = os.getenv("MANAGER_ID")
+# ВАЖНО: Теперь ссылка тоже берется из настроек!
+WEBAPP_URL = os.getenv("WEBAPP_URL") 
 
-if not TOKEN:
-    exit("❌ Ошибка: Токен не найден! Проверь файл .env")
+if not TOKEN or not WEBAPP_URL:
+    exit("❌ Ошибка: Не найден TOKEN или WEBAPP_URL. Проверь .env или настройки хостинга!")
 
 bot = Bot(token=TOKEN)
 dp = Dispatcher()
