@@ -19,7 +19,6 @@ function App() {
   const [selectedProduct, setSelectedProduct] = useState(null); 
   const [toast, setToast] = useState(""); 
 
-  // Сортировка и промо
   const [sortOrder, setSortOrder] = useState("default");
   const [promoInput, setPromoInput] = useState(""); 
   const [appliedPromo, setAppliedPromo] = useState(null); 
@@ -27,9 +26,9 @@ function App() {
   const [orderComment, setOrderComment] = useState(""); 
   const [userData, setUserData] = useState({ name: '', phone: '', city: '' });
 
-  // === НОВЫЕ СОСТОЯНИЯ ДЛЯ 18+ ===
-  const [showAgeModal, setShowAgeModal] = useState(false); // Показ окна 18+
-  const [isAgeVerified, setIsAgeVerified] = useState(false); // Подтвердил ли юзер возраст
+  const [showAgeModal, setShowAgeModal] = useState(false);
+  const [isAgeVerified, setIsAgeVerified] = useState(false);
+  const [selectedOptionIndex, setSelectedOptionIndex] = useState(0);
 
   useEffect(() => {
     if (window.Telegram?.WebApp) {
@@ -42,32 +41,46 @@ function App() {
     setTimeout(() => setToast(""), 2000);
   };
 
-  const addToCart = (product) => {
+  const openModal = (product) => {
+    setSelectedProduct(product);
+    setSelectedOptionIndex(0);
+  };
+
+  const addToCart = (product, selectedOption = null) => {
     if (product.isAvailable === false) {
       showToast("❌ Товар временно недоступен");
       return;
     }
+
+    const cartItemId = selectedOption ? `${product.id}-${selectedOption.name}` : String(product.id);
+    const itemPrice = selectedOption ? selectedOption.price : product.price;
+    
+    // 🆕 Если у опции есть своя картинка, берем её. Если нет - берем базовую от товара
+    const itemImg = (selectedOption && selectedOption.img) ? selectedOption.img : product.img;
+
     setCart((prevCart) => {
-      const existingItem = prevCart.find(item => item.id === product.id);
+      const existingItem = prevCart.find(item => item.cartItemId === cartItemId);
       if (existingItem) {
         return prevCart.map(item => 
-          item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
+          item.cartItemId === cartItemId ? { ...item, quantity: item.quantity + 1 } : item
         );
       } else {
-        return [...prevCart, { ...product, quantity: 1 }];
+        // Перезаписываем img для корзины на itemImg
+        return [...prevCart, { ...product, cartItemId, price: itemPrice, img: itemImg, selectedOption, quantity: 1 }];
       }
     });
-    showToast(`✅ Добавлено: ${product.name}`);
+    
+    showToast(`✅ Добавлено: ${product.name} ${selectedOption ? `(${selectedOption.name})` : ''}`);
   };
 
-  const removeFromCart = (productId) => {
+  const removeFromCart = (cartItemId) => {
     setCart((prevCart) => {
-      const existingItem = prevCart.find(item => item.id === productId);
+      const existingItem = prevCart.find(item => item.cartItemId === cartItemId);
       if (existingItem.quantity === 1) {
-        return prevCart.filter(item => item.id !== productId);
+        return prevCart.filter(item => item.cartItemId !== cartItemId);
       } else {
         return prevCart.map(item => 
-          item.id === productId ? { ...item, quantity: item.quantity - 1 } : item 
+          item.cartItemId === cartItemId ? { ...item, quantity: item.quantity - 1 } : item 
         );
       }
     });
@@ -99,20 +112,18 @@ function App() {
     }
   };
 
-  // === ЛОГИКА ПЕРЕКЛЮЧЕНИЯ КАТЕГОРИЙ (с проверкой 18+) ===
   const handleCategoryClick = (cat) => {
     if (cat === "18+") {
       if (isAgeVerified) {
-        setActiveCategory(cat); // Уже подтверждал - пускаем
+        setActiveCategory(cat);
       } else {
-        setShowAgeModal(true); // Не подтверждал - показываем окно
+        setShowAgeModal(true);
       }
     } else {
-      setActiveCategory(cat); // Обычная категория
+      setActiveCategory(cat);
     }
   };
 
-  // Подтверждение возраста
   const confirmAge = () => {
     setIsAgeVerified(true);
     setShowAgeModal(false);
@@ -122,20 +133,19 @@ function App() {
 
   const denyAge = () => {
     setShowAgeModal(false);
-    // Остаемся на текущей категории
   };
 
-  // --- ЛОГИКА СОРТИРОВКИ И ФИЛЬТРАЦИИ ---
-  const getSortedProducts = () => {
-    let filtered;
-    
-    // ВАЖНО: Если категория "Все", мы исключаем товары 18+
-    if (activeCategory === "Все") {
-      filtered = products.filter(product => product.game !== "18+");
-    } else {
-      // Иначе показываем товары только выбранной категории
-      filtered = products.filter(product => product.game === activeCategory);
-    }
+const getSortedProducts = () => {
+    let filtered = products.filter(product => {
+      // Превращаем одиночную категорию в массив, чтобы логика была единой
+      const gameArray = Array.isArray(product.game) ? product.game : [product.game];
+      
+      if (activeCategory === "Все") {
+        return !gameArray.includes("18+"); // Скрываем 18+ из "Все"
+      } else {
+        return gameArray.includes(activeCategory); // Ищем совпадение
+      }
+    });
 
     const sorted = [...filtered]; 
     if (sortOrder === "asc") {
@@ -147,7 +157,6 @@ function App() {
   };
 
   const displayedProducts = getSortedProducts();
-
   const subtotalPrice = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
   const discountAmount = Math.floor(subtotalPrice * discountPercent);
   const totalPrice = subtotalPrice - discountAmount;
@@ -157,8 +166,14 @@ function App() {
   const isFormValid = userData.name.trim() && userData.phone.trim() && userData.city.trim() && cart.length > 0 && isMinOrderReached;
 
   const handleCheckout = () => {
+    // 🆕 Перед отправкой пробегаемся по корзине и приклеиваем опцию к имени
+    const formattedCart = cart.map(item => ({
+        ...item,
+        name: item.selectedOption ? `${item.name} (${item.selectedOption.name})` : item.name
+    }));
+
     const orderData = { 
-      items: cart, 
+      items: formattedCart, // ⬅️ Отправляем обновленный список с опциями!
       subtotal: subtotalPrice,
       discount: discountAmount,
       totalPrice: totalPrice, 
@@ -174,6 +189,11 @@ function App() {
     }
   };
 
+  // 🆕 Вычисляем текущую картинку для модалки: если выбрана опция с картинкой — показываем её
+  const currentModalImg = selectedProduct && selectedProduct.options && selectedProduct.options[selectedOptionIndex]?.img
+      ? selectedProduct.options[selectedOptionIndex].img
+      : selectedProduct?.img;
+
   return (
     <div className="app-container">
       <div className={`toast ${toast ? 'show' : ''}`}>{toast}</div>
@@ -188,7 +208,7 @@ function App() {
         </button>
       </header>
 
-      {/* === МОДАЛКА 18+ === */}
+      {/* Окно 18+ */}
       {showAgeModal && (
         <div className="modal-overlay age-modal-overlay">
           <div className="modal-content age-modal-content">
@@ -196,41 +216,60 @@ function App() {
             <h2>Вам есть 18 лет?</h2>
             <p>Этот раздел содержит товары для взрослых. Пожалуйста, подтвердите ваш возраст.</p>
             <div className="modal-buttons-row">
-              <button className="modal-info-btn deny-btn" onClick={denyAge}>Нет, назад</button>
+              <button className="modal-info-btn deny-btn" onClick={denyAge}>Нет</button>
               <button className="modal-buy-btn confirm-btn" onClick={confirmAge}>Да, мне 18+</button>
             </div>
           </div>
         </div>
       )}
 
-      {/* Обычная модалка товара */}
+      {/* Модальное окно товара */}
       {selectedProduct && (
         <div className="modal-overlay" onClick={() => setSelectedProduct(null)}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <button className="close-modal" onClick={() => setSelectedProduct(null)}>×</button>
             <div className="modal-img">
-              {selectedProduct.img && typeof selectedProduct.img === 'string' && selectedProduct.img.length > 5 ? (
-                <img src={selectedProduct.img} alt={selectedProduct.name} />
+              {/* 🆕 Используем динамическую картинку currentModalImg */}
+              {currentModalImg && typeof currentModalImg === 'string' && currentModalImg.length > 5 ? (
+                <img src={currentModalImg} alt={selectedProduct.name} />
               ) : (
-                selectedProduct.img
+                currentModalImg
               )}
             </div>
             <h2>{selectedProduct.name}</h2>
-            <div className="modal-game">{selectedProduct.game}</div>
+            <div className="modal-game">{Array.isArray(selectedProduct.game) ? selectedProduct.game.join(', ') : selectedProduct.game}</div>
             <p className="modal-desc">{selectedProduct.desc}</p>
-            <div className="modal-price">{selectedProduct.price} ₽</div>
+            
+            <div className="modal-price">
+                {selectedProduct.options && selectedProduct.options.length > 0
+                    ? `${selectedProduct.options[selectedOptionIndex].price} ₽`
+                    : `${selectedProduct.price} ₽`}
+            </div>
             
             <div className="modal-buttons-row">
-              {selectedProduct.tgLink && (
-                <button className="modal-info-btn" onClick={() => openInfoLink(selectedProduct.tgLink)}>
-                  ℹ️ О товаре
-                </button>
+              {selectedProduct.options && selectedProduct.options.length > 0 && (
+                <select
+                  className="modal-option-select"
+                  value={selectedOptionIndex}
+                  onChange={(e) => setSelectedOptionIndex(Number(e.target.value))}
+                >
+                  {selectedProduct.options.map((opt, idx) => (
+                    <option key={idx} value={idx}>{opt.name}</option>
+                  ))}
+                </select>
               )}
+
+              {/* 🆕 Кнопка "О товаре" теперь рендерится всегда (мы добавили tgLink всем) */}
+              <button className="modal-info-btn" onClick={() => openInfoLink(selectedProduct.tgLink)}>
+                ℹ️ О товаре
+              </button>
+
               <button 
                 className={`modal-buy-btn ${selectedProduct.isAvailable === false ? 'disabled-btn' : ''}`} 
                 onClick={() => { 
                     if(selectedProduct.isAvailable !== false) {
-                        addToCart(selectedProduct); 
+                        const opt = selectedProduct.options ? selectedProduct.options[selectedOptionIndex] : null;
+                        addToCart(selectedProduct, opt); 
                         setSelectedProduct(null); 
                     }
                 }}
@@ -243,6 +282,7 @@ function App() {
         </div>
       )}
 
+      {/* Корзина */}
       {isCartOpen ? (
         <div className="cart-view">
           <h2>Оформление заказа</h2>
@@ -252,16 +292,22 @@ function App() {
             <>
               <div className="cart-items-list">
                 {cart.map((item) => (
-                  <div key={item.id} className="cart-item">
+                  <div key={item.cartItemId} className="cart-item">
                     <div className="cart-item-img">
+                      {/* Картинка будет соответствовать выбранной опции */}
                       {item.img && typeof item.img === 'string' && item.img.length > 5 ? <img src={item.img} alt={item.name} /> : item.img}
                     </div>
                     <div className="cart-item-info">
-                      <h4>{item.name}</h4>
+                      <h4>
+                        {item.name}
+                        {item.selectedOption && (
+                            <span className="cart-item-option"><br/>({item.selectedOption.name})</span>
+                        )}
+                      </h4>
                       <div className="quantity-controls">
-                        <button className="qty-btn" onClick={() => removeFromCart(item.id)}>−</button>
+                        <button className="qty-btn" onClick={() => removeFromCart(item.cartItemId)}>−</button>
                         <span className="qty-text">{item.quantity} шт.</span>
-                        <button className="qty-btn" onClick={() => addToCart(item)}>+</button>
+                        <button className="qty-btn" onClick={() => addToCart(item, item.selectedOption)}>+</button>
                       </div>
                     </div>
                     <div className="cart-item-total">{item.price * item.quantity} ₽</div>
@@ -270,12 +316,7 @@ function App() {
               </div>
 
               <div className="promo-section">
-                <input 
-                  type="text" 
-                  placeholder="Промокод" 
-                  value={promoInput}
-                  onChange={(e) => setPromoInput(e.target.value)}
-                />
+                <input type="text" placeholder="Промокод" value={promoInput} onChange={(e) => setPromoInput(e.target.value)} />
                 <button onClick={handleApplyPromo}>Применить</button>
               </div>
 
@@ -284,12 +325,7 @@ function App() {
                 <input type="text" name="name" placeholder="ФИО" value={userData.name} onChange={handleInputChange} />
                 <input type="tel" name="phone" placeholder="Номер телефона" value={userData.phone} onChange={handleInputChange} />
                 <input type="text" name="city" placeholder="Город доставки" value={userData.city} onChange={handleInputChange} />
-                <textarea 
-                  className="comment-input"
-                  placeholder="Комментарий к заказу (необязательно)"
-                  value={orderComment}
-                  onChange={(e) => setOrderComment(e.target.value)}
-                />
+                <textarea className="comment-input" placeholder="Комментарий к заказу" value={orderComment} onChange={(e) => setOrderComment(e.target.value)} />
               </div>
 
               <div className="cart-summary">
@@ -301,20 +337,12 @@ function App() {
                 )}
                 <h3>Итого: <span>{totalPrice} ₽</span></h3>
                 {!isMinOrderReached && (
-                  <div className="min-order-warning">
-                    ⚠️ Минимальная сумма заказа: {MIN_ORDER_AMOUNT} ₽
-                  </div>
+                  <div className="min-order-warning">⚠️ Минимальная сумма заказа: {MIN_ORDER_AMOUNT} ₽</div>
                 )}
-                <button 
-                  className={`checkout-btn ${!isFormValid ? 'disabled' : ''}`} 
-                  onClick={handleCheckout}
-                  disabled={!isFormValid}
-                >
+                <button className={`checkout-btn ${!isFormValid ? 'disabled' : ''}`} onClick={handleCheckout} disabled={!isFormValid}>
                   {isFormValid ? "🚀 Подтвердить заказ" : "Заполните все поля"}
                 </button>
-                <p className="terms-text">
-                  Нажимая кнопку, вы соглашаетесь с <span onClick={() => openInfoLink(TERMS_LINK)}>условиями использования</span>
-                </p>
+                <p className="terms-text">Нажимая кнопку, вы соглашаетесь с <span onClick={() => openInfoLink(TERMS_LINK)}>условиями использования</span></p>
               </div>
             </>
           )}
@@ -324,25 +352,13 @@ function App() {
           <div className="filters-container">
             <div className="filters">
                 {categories.map(cat => (
-                <button 
-                    key={cat} 
-                    /* Здесь мы используем handleCategoryClick вместо setActiveCategory
-                       чтобы перехватить нажатие на 18+ 
-                    */
-                    className={`filter-btn ${activeCategory === cat ? 'active' : ''}`} 
-                    onClick={() => handleCategoryClick(cat)} 
-                >
+                <button key={cat} className={`filter-btn ${activeCategory === cat ? 'active' : ''}`} onClick={() => handleCategoryClick(cat)}>
                     {cat}
                 </button>
                 ))}
             </div>
-            
             <div className="sort-wrapper">
-                <select 
-                    className="sort-select" 
-                    value={sortOrder} 
-                    onChange={(e) => setSortOrder(e.target.value)}
-                >
+                <select className="sort-select" value={sortOrder} onChange={(e) => setSortOrder(e.target.value)}>
                     <option value="default">Сортировка</option>
                     <option value="asc">Сначала дешевые</option>
                     <option value="desc">Сначала дорогие</option>
@@ -353,7 +369,7 @@ function App() {
           <div className="catalog">
             {displayedProducts.map((product) => (
               <div key={product.id} className="product-card">
-                <div className="clickable-area" onClick={() => setSelectedProduct(product)}>
+                <div className="clickable-area" onClick={() => openModal(product)}>
                   <div className="product-image">
                     {product.img && typeof product.img === 'string' && product.img.length > 5 ? (
                         <img src={product.img} alt={product.name} /> 
@@ -361,17 +377,27 @@ function App() {
                         product.img
                     )}
                   </div>
-                  <div className="product-game">{product.game}</div>
+                  <div className="product-game">{Array.isArray(product.game) ? product.game.join(', ') : product.game}</div>
                   <h3 className="product-name">{product.name}</h3>
                 </div>
                 
                 <div className="card-bottom">
-                  <div className="product-price">{product.price} ₽</div>
+                  <div className="product-price">
+                    {product.options && product.options.length > 0
+                        ? `от ${Math.min(...product.options.map(o => o.price))} ₽`
+                        : `${product.price} ₽`}
+                  </div>
                   <button 
                     className={`buy-btn-small ${product.isAvailable === false ? 'disabled-small' : ''}`} 
                     onClick={(e) => {
                         e.stopPropagation();
-                        if(product.isAvailable !== false) addToCart(product);
+                        if(product.isAvailable !== false) {
+                            if (product.options && product.options.length > 0) {
+                                openModal(product);
+                            } else {
+                                addToCart(product);
+                            }
+                        }
                     }}
                     disabled={product.isAvailable === false}
                   >
