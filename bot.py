@@ -21,9 +21,6 @@ if not TOKEN or not WEBAPP_URL:
 bot = Bot(token=TOKEN)
 dp = Dispatcher()
 
-# Ссылка на твое Web App (НЕ ЗАБУДЬ ОБНОВИТЬ NGROK ССЫЛКУ!)
-WEBAPP_URL = "https://untransitive-nancee-decadently.ngrok-free.dev"
-
 @dp.message(CommandStart())
 async def command_start_handler(message: types.Message):
     markup = ReplyKeyboardMarkup(
