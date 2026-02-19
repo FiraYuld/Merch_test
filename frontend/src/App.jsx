@@ -13,7 +13,12 @@ const TERMS_LINK = "https://t.me/durov";
 const MIN_ORDER_AMOUNT = 1500; 
 
 function App() {
-  const [cart, setCart] = useState([]); 
+  // 🆕 Умная корзина: при запуске ищет сохраненные товары
+  const [cart, setCart] = useState(() => {
+    const savedCart = localStorage.getItem('sheepCart');
+    return savedCart ? JSON.parse(savedCart) : [];
+  });
+  
   const [activeCategory, setActiveCategory] = useState("Все"); 
   const [isCartOpen, setIsCartOpen] = useState(false); 
   const [selectedProduct, setSelectedProduct] = useState(null); 
@@ -24,11 +29,25 @@ function App() {
   const [appliedPromo, setAppliedPromo] = useState(null); 
   const [discountPercent, setDiscountPercent] = useState(0); 
   const [orderComment, setOrderComment] = useState(""); 
-  const [userData, setUserData] = useState({ name: '', phone: '', city: '' });
+
+  // 🆕 Умные данные: запоминает ФИО и адрес
+  const [userData, setUserData] = useState(() => {
+    const savedUser = localStorage.getItem('sheepUser');
+    return savedUser ? JSON.parse(savedUser) : { name: '', phone: '', city: '' };
+  });
 
   const [showAgeModal, setShowAgeModal] = useState(false);
   const [isAgeVerified, setIsAgeVerified] = useState(false);
   const [selectedOptionIndex, setSelectedOptionIndex] = useState(0);
+
+  // 🆕 Эти эффекты автоматически сохраняют данные в память при любом их изменении
+  useEffect(() => {
+    localStorage.setItem('sheepCart', JSON.stringify(cart));
+  }, [cart]);
+
+  useEffect(() => {
+    localStorage.setItem('sheepUser', JSON.stringify(userData));
+  }, [userData]);
 
   useEffect(() => {
     if (window.Telegram?.WebApp) {
@@ -55,7 +74,7 @@ function App() {
     const cartItemId = selectedOption ? `${product.id}-${selectedOption.name}` : String(product.id);
     const itemPrice = selectedOption ? selectedOption.price : product.price;
     
-    // 🆕 Если у опции есть своя картинка, берем её. Если нет - берем базовую от товара
+    // Если у опции есть своя картинка, берем её. Если нет - берем базовую от товара
     const itemImg = (selectedOption && selectedOption.img) ? selectedOption.img : product.img;
 
     setCart((prevCart) => {
@@ -135,7 +154,7 @@ function App() {
     setShowAgeModal(false);
   };
 
-const getSortedProducts = () => {
+  const getSortedProducts = () => {
     let filtered = products.filter(product => {
       // Превращаем одиночную категорию в массив, чтобы логика была единой
       const gameArray = Array.isArray(product.game) ? product.game : [product.game];
@@ -173,7 +192,7 @@ const getSortedProducts = () => {
     }));
 
     const orderData = { 
-      items: formattedCart, // ⬅️ Отправляем обновленный список с опциями!
+      items: formattedCart, 
       subtotal: subtotalPrice,
       discount: discountAmount,
       totalPrice: totalPrice, 
@@ -182,14 +201,20 @@ const getSortedProducts = () => {
       user: userData 
     };
 
+    // 🆕 Очищаем корзину из памяти браузера, так как заказ успешно оформлен
+    localStorage.removeItem('sheepCart');
+
     if (window.Telegram?.WebApp?.sendData) {
       window.Telegram.WebApp.sendData(JSON.stringify(orderData));
     } else {
       alert(`Заказ оформлен!\nИтог: ${totalPrice} ₽`);
+      // 🆕 Очищаем корзину локально для тестов в браузере
+      setCart([]);
+      setIsCartOpen(false);
     }
   };
 
-  // 🆕 Вычисляем текущую картинку для модалки: если выбрана опция с картинкой — показываем её
+  // Вычисляем текущую картинку для модалки: если выбрана опция с картинкой — показываем её
   const currentModalImg = selectedProduct && selectedProduct.options && selectedProduct.options[selectedOptionIndex]?.img
       ? selectedProduct.options[selectedOptionIndex].img
       : selectedProduct?.img;
@@ -229,7 +254,6 @@ const getSortedProducts = () => {
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <button className="close-modal" onClick={() => setSelectedProduct(null)}>×</button>
             <div className="modal-img">
-              {/* 🆕 Используем динамическую картинку currentModalImg */}
               {currentModalImg && typeof currentModalImg === 'string' && currentModalImg.length > 5 ? (
                 <img src={currentModalImg} alt={selectedProduct.name} />
               ) : (
@@ -237,7 +261,12 @@ const getSortedProducts = () => {
               )}
             </div>
             <h2>{selectedProduct.name}</h2>
-            <div className="modal-game">{Array.isArray(selectedProduct.game) ? selectedProduct.game.join(', ') : selectedProduct.game}</div>
+            
+            {/* 🆕 Поддержка мультикатегорий в модалке */}
+            <div className="modal-game">
+                {Array.isArray(selectedProduct.game) ? selectedProduct.game.join(', ') : selectedProduct.game}
+            </div>
+            
             <p className="modal-desc">{selectedProduct.desc}</p>
             
             <div className="modal-price">
@@ -259,7 +288,7 @@ const getSortedProducts = () => {
                 </select>
               )}
 
-              {/* 🆕 Кнопка "О товаре" теперь рендерится всегда (мы добавили tgLink всем) */}
+              {/* Кнопка "О товаре" рендерится всегда */}
               <button className="modal-info-btn" onClick={() => openInfoLink(selectedProduct.tgLink)}>
                 ℹ️ О товаре
               </button>
@@ -294,7 +323,6 @@ const getSortedProducts = () => {
                 {cart.map((item) => (
                   <div key={item.cartItemId} className="cart-item">
                     <div className="cart-item-img">
-                      {/* Картинка будет соответствовать выбранной опции */}
                       {item.img && typeof item.img === 'string' && item.img.length > 5 ? <img src={item.img} alt={item.name} /> : item.img}
                     </div>
                     <div className="cart-item-info">
@@ -377,7 +405,12 @@ const getSortedProducts = () => {
                         product.img
                     )}
                   </div>
-                  <div className="product-game">{Array.isArray(product.game) ? product.game.join(', ') : product.game}</div>
+                  
+                  {/* 🆕 Поддержка мультикатегорий в каталоге */}
+                  <div className="product-game">
+                      {Array.isArray(product.game) ? product.game.join(', ') : product.game}
+                  </div>
+                  
                   <h3 className="product-name">{product.name}</h3>
                 </div>
                 
