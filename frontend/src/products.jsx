@@ -340,4 +340,4 @@ export const products = [
     }
 ];
 
-export const categories = ["Все", "Honkai: Star Rail", "Genshin Impact", "Honkai: 3rd", "Arknights", "Другое", "18+", "Индивидуально"];
+export const categories = ["Все", "Honkai: Star Rail", "Zenless Zone Zero", "Genshin Impact", "Honkai: 3rd", "Arknights", "Другое", "18+", "Индивидуально"];
