@@ -315,6 +315,299 @@ export const products = [
             { name: "Цзинь Юань", price: 6500, img: IMAGES.plush_1}, 
         ]
     },
+
+    {
+        id: 22,
+        name: "Рандом-бокс Банбу от PopMart",
+        game: ["Zenless Zone Zero", "PopMart"],
+        price: 1500, 
+        img: IMAGES.banboo_popmart, 
+        desc: (
+        <>
+          <b></b>В боксе 1 случайный банбу <br />
+          <b>Размеры:</b> 7-9 см <br />
+        </>
+        ),        
+        tgLink: "https://t.me/telegram/206",
+        isAvailable: true,
+        options: [
+            { name: "1 бокс", price: 1500, img: IMAGES.banboo_popmart }, 
+            { name: "Полный комплект", price: 14500, img: IMAGES.banboo_popmart}, 
+        ]
+    },
+
+    {
+        id: 23,
+        name: "Рандом-бокс Genshin Impact от PopMart",
+        game: ["Genshin Impact", "PopMart"],
+        price: 2400, // Цена отображаемая в каталоге (за 1 бокс)
+        img: IMAGES.genshin_popmart, // Не забудь добавить переменную в images.js
+        desc: (
+        <>
+          Внутри 1 случайная фигурка серии: Айно, Дурин, Варка, Флинс, Колумбина, Инеффа или редкий секретный дроп — Рери. <br />
+          <br />
+          <b>Размеры:</b> 7.4 - 8.2 см <br />
+          <br />
+          <i>*При покупке набора из 6 боксов есть шанс получить секретную золотую фигурку Рери (выпадение не гарантировано).</i>
+        </>
+        ),        
+        tgLink: "https://t.me/telegram/207", 
+        isAvailable: true,
+        options: [
+            { name: "1 бокс", price: 2400, img: IMAGES.genshin_popmart }, 
+            { name: "Набор (6 стилей)", price: 9000, img: IMAGES.genshin_popmart } 
+        ]
+    },
+
+    {
+        id: 24,
+        name: "Нендроид Зарянка",
+        game: "Honkai: Star Rail",
+        price: 6500, 
+        img: IMAGES.robin_nendroid, 
+        desc: (
+        <>
+          <b>Размер:</b> высота игрушки около 10 см.<br />
+          <br />
+          <b>Есть сменные лица с разными эмоциями.</b>
+        </>
+        ),        
+        tgLink: "https://t.me/telegram/208", // Замени на актуальную ссылку
+        isAvailable: true
+    },
+    {
+        id: 25,
+        name: "Нендроид Воскресенье",
+        game: "Honkai: Star Rail",
+        price: 6500, 
+        img: IMAGES.sunday_nendroid, 
+        desc: (
+        <>
+          <b>Размер:</b> высота игрушки около 10 см.<br />
+          <br />
+          <b>Есть сменные лица с разными эмоциями.</b>
+        </>
+        ),        
+        tgLink: "https://t.me/telegram/209", // Замени на актуальную ссылку
+        isAvailable: true
+    },
+    {
+        id: 26,
+        name: "Нендроид Авантюрин",
+        game: "Honkai: Star Rail",
+        price: 6500, 
+        img: IMAGES.aventurine_nendroid, 
+        desc: (
+        <>
+          <b>Размер:</b> высота игрушки около 10 см.<br />
+          <br />
+          <b>Есть сменные лица с разными эмоциями.</b>
+        </>
+        ),        
+        tgLink: "https://t.me/telegram/210", // Замени на актуальную ссылку
+        isAvailable: true
+    },
+    {
+        id: 27,
+        name: "Нендроид Дань Хэн",
+        game: "Honkai: Star Rail",
+        price: 6300, 
+        img: IMAGES.danheng_nendroid, 
+        desc: (
+        <>
+          <b>Размер:</b> высота игрушки около 10 см.<br />
+          <br />
+          <b>Есть сменные лица с разными эмоциями.</b>
+        </>
+        ),        
+        tgLink: "https://t.me/telegram/211", // Замени на актуальную ссылку
+        isAvailable: true
+    },
+    {
+        id: 28,
+        name: "Нендроид Блэйд",
+        game: "Honkai: Star Rail",
+        price: 6300, 
+        img: IMAGES.blade_nendroid, 
+        desc: (
+        <>
+          <b>Размер:</b> высота игрушки около 10 см.<br />
+          <br />
+          <b>Есть сменные лица с разными эмоциями.</b>
+        </>
+        ),        
+        tgLink: "https://t.me/telegram/212", // Замени на актуальную ссылку
+        isAvailable: true
+    },
+    {
+        id: 29,
+        name: "Нендроид Март 7", // У тебя было написано "Март 8", я исправил на классическое "Март 7" (или верни Март 8, если это специфика фигурки!)
+        game: "Honkai: Star Rail",
+        price: 6300, 
+        img: IMAGES.march_nendroid, 
+        desc: (
+        <>
+          <b>Размер:</b> высота игрушки около 10 см.<br />
+          <br />
+          <b>Есть сменные лица с разными эмоциями.</b>
+        </>
+        ),        
+        tgLink: "https://t.me/telegram/213", // Замени на актуальную ссылку
+        isAvailable: true
+    },
+
+    {
+        id: 30,
+        name: "Брелок Мини Лабубу 10см",
+        game: ["PopMart"],
+        price: 1600, 
+        img: IMAGES.labubu_mini1, // Не забудь добавить переменную в images.js
+        desc: (
+        <>
+          Мини-брелок Лабубу в виде случайного бокса.<br />
+          <br />
+          <b>Размер:</b> 10 см.<br />
+          <br />
+          Доступно две версии коробок, которые отличаются цветовой палитрой. В каждой версии может выпасть 1 случайный брелок из 15 возможных цветов.<br />
+          <br />
+          <i>*Если вы не хотите полагаться на случайность, выберите опцию «Нужный цвет на выбор» и укажите цвет в комментариях к заказу.</i>
+        </>
+        ),        
+        tgLink: "https://t.me/telegram/214", // Замени на актуальную ссылку
+        isAvailable: true,
+        options: [
+            { name: "1 коробка (Версия 1)", price: 1600, img: IMAGES.labubu_mini1 }, 
+            { name: "1 коробка (Версия 2)", price: 1600, img: IMAGES.labubu_mini2 }, 
+            { name: "Нужный цвет на выбор", price: 2100, img: IMAGES.labubu_mini }
+        ]
+    },
+
+    {
+        id: 31,
+        name: "Футболки Arknights: Endfield (3 опции)",
+        game: "Arknights",
+        price: 2800, 
+        img: IMAGES.endfield_tshirt1, // Добавь в images.js
+        desc: (
+        <>
+          Стильная футболка по мотивам Arknights: Endfield.<br />
+          <br />
+          <b>Материал:</b> 75% хлопок, 25% полиэстер.<br />
+          <b>Размеры:</b> M, L, XL.<br />
+          <br />
+          <i>*Пожалуйста, укажите нужный размер (M, L или XL) в комментарии при оформлении заказа.</i>
+        </>
+        ),        
+        tgLink: "https://t.me/telegram/215",
+        isAvailable: true,
+        options: [
+            { name: "Футболка Зиплайн", price: 2800, img: IMAGES.endfield_tshirt1 },
+            { name: "Футболка Очки", price: 2800, img: IMAGES.endfield_tshirt2 },
+            { name: "Футболка Инструменты", price: 2800, img: IMAGES.endfield_tshirt3 }
+        ]
+    },
+    {
+        id: 32,
+        name: "Плюшевые зайчики Лэватейн и Ивонна",
+        game: "Arknights",
+        price: 1300, 
+        img: IMAGES.bunnies_plush1, // Добавь в images.js
+        desc: (
+        <>
+          Милые плюшевые зайчики в виде персонажей Лэватейн и Ивонны.<br />
+          <br />
+          <b>Размер:</b> 21 см.<br />
+          <br />
+          <i>*Одежда у игрушек полностью снимается!</i>
+        </>
+        ),        
+        tgLink: "https://t.me/telegram/216",
+        isAvailable: true,
+        options: [
+            { name: "Зайчик Лэватейн", price: 1300, img: IMAGES.bunnies_plush1 },
+            { name: "Зайчик Ивонна", price: 1300, img: IMAGES.bunnies_plush2 }
+        ]
+    },
+    {
+        id: 33,
+        name: "Стенд Ивонны (Гачапон-автомат)",
+        game: "Arknights",
+        price: 1700, 
+        img: IMAGES.yvonne_stand, // Добавь в images.js
+        desc: (
+        <>
+          Интерактивный акриловый стенд с Ивонной в виде автомата с игрушками.<br />
+          <br />
+          <b>Материал:</b> Акрил.<br />
+          <b>Размер:</b> 16 см.<br />
+          <br />
+          <b>Особенность:</b> Стенд полностью интерактивный! Ручку автомата можно крутить, и внутри будут падать шарики.
+        </>
+        ),        
+        tgLink: "https://t.me/telegram/217",
+        isAvailable: true
+    },
+
+    {
+        id: 34,
+        name: "Комплект Шоппер + значки + брелок",
+        game: "Arknights", // ⬅️ Замени на нужную категорию, если это мерч по игре
+        price: 2100, 
+        img: IMAGES.shopper_set, // Не забудь добавить в images.js
+        desc: (
+        <>
+          Большой набор с шоппером и аксессуарами.<br />
+          <br />
+          <b>В комплекте:</b><br />
+          • Хлопковый шоппер (34х38 см, длина ремешка регулируется до 60 см)<br />
+          • Брелок (16 см)<br />
+          • 2 значка (5.8 см)<br />
+          • 2 значка (7.5 см)
+        </>
+        ),        
+        tgLink: "https://t.me/telegram/218", // Замени на актуальную ссылку
+        isAvailable: true
+    },
+    {
+        id: 35,
+        name: "Подарочный набор",
+        game: "Arknights", // ⬅️ Замени на нужную категорию
+        price: 3100, 
+        img: IMAGES.gift_box, // Не забудь добавить в images.js
+        desc: (
+        <>
+          Эксклюзивный подарочный набор для настоящих фанатов Arknights: Endfield.<br />
+          <br />
+          <b>В комплекте:</b><br />
+          • Кружка (480 мл)<br />
+          • Брелок с зайчиком (зайчик 7 см, лента 12 см)<br />
+          • Брелок с карточкой (8.5х5.4 см)<br />
+          • Ручка (19.6 см)
+        </>
+        ),        
+        tgLink: "https://t.me/telegram/219", // Замени на актуальную ссылку
+        isAvailable: true
+    },
+
+    {
+        id: 36,
+        name: "Сумка Arknights: Endfield",
+        game: "Arknights",
+        price: 3400, 
+        img: IMAGES.endfield_bag, // Не забудь добавить переменную в images.js
+        desc: (
+        <>
+          Стильная и вместительная сумка по мотивам Arknights: Endfield.<br />
+          <br />
+          <b>Размеры:</b><br />
+          • Внутренняя ширина: ~26 см<br />
+          • Внешняя ширина: ~35 см<br />
+          • Высота: ~24 см
+        </>
+        ),        
+        tgLink: "https://t.me/telegram/220", // Замени на актуальную ссылку
+        isAvailable: true
+    },
     
     // --- ТОВАРЫ 18+ ---
     {
@@ -340,4 +633,4 @@ export const products = [
     }
 ];
 
-export const categories = ["Все", "Honkai: Star Rail", "Zenless Zone Zero", "Genshin Impact", "Honkai: 3rd", "Arknights", "Другое", "18+", "Индивидуально"];
+export const categories = ["Все", "Honkai: Star Rail", "Zenless Zone Zero", "Genshin Impact", "PopMart", "Arknights", "Другое", "18+", "Индивидуально"];

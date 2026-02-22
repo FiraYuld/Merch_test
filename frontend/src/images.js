@@ -26,6 +26,25 @@ import aventurine_bag from './assets/aventurine_bag.jpg';
 import feixiao_bag from './assets/feixiao_bag.jpg';
 import chimers_random from './assets/chimers_random.jpg';
 import plush_1 from './assets/plush_1.jpg';
+import banboo_popmart from './assets/banboo_popmart.png';
+import genshin_popmart from './assets/genshin_popmart.jpg';
+import aventurine_nendroid from './assets/aventurine_nendroid.png';
+import robin_nendroid from './assets/robin_nendroid.png';
+import sunday_nendroid from './assets/sunday_nendroid.png';
+import blade_nendroid from './assets/blade_nendroid.png';
+import march_nendroid from './assets/march_nendroid.png';
+import danheng_nendroid from './assets/danheng_nendroid.png';
+import labubu_mini1 from './assets/labubu_mini1.png';
+import labubu_mini2 from './assets/labubu_mini2.png';
+import endfield_tshirt1 from './assets/endfield_tshirt1.png';
+import endfield_tshirt2 from './assets/endfield_tshirt2.png';
+import endfield_tshirt3 from './assets/endfield_tshirt3.png';
+import bunnies_plush1 from './assets/bunnies_plush1.png';
+import bunnies_plush2 from './assets/bunnies_plush2.png';
+import yvonne_stand from './assets/yvonne_stand.png';
+import shopper_set from './assets/shopper_set.png';
+import gift_box from './assets/gift_box.png'
+import endfield_bag from './assets/endfield_bag.png'
 
 // Экспортируем все картинки как единый объект
 export const IMAGES = {
@@ -52,6 +71,33 @@ export const IMAGES = {
     feixiao_bag: feixiao_bag,
     chimers_random: chimers_random,
     plush_1: plush_1,
+    banboo_popmart: banboo_popmart,
+    genshin_popmart: genshin_popmart,
+    aventurine_nendroid: aventurine_nendroid,
+    robin_nendroid: robin_nendroid,
+    sunday_nendroid: sunday_nendroid,
+    blade_nendroid: blade_nendroid,
+    march_nendroid: march_nendroid,
+    danheng_nendroid: danheng_nendroid,
+    labubu_mini1: labubu_mini1,
+    labubu_mini2: labubu_mini2,
+    endfield_tshirt1: endfield_tshirt1,
+    endfield_tshirt2: endfield_tshirt2,
+    endfield_tshirt3: endfield_tshirt3,
+    bunnies_plush1: bunnies_plush1,
+    bunnies_plush2: bunnies_plush2,
+    yvonne_stand: yvonne_stand,
+    gift_box: gift_box,
+    shopper_set: shopper_set,
+    endfield_bag: endfield_bag,
+
+
+
+
+
+
+
+
     // Сюда будешь добавлять новые:
     // raiden: raidenImg,
 };
