@@ -45,6 +45,7 @@ import yvonne_stand from './assets/yvonne_stand.png';
 import shopper_set from './assets/shopper_set.png';
 import gift_box from './assets/gift_box.png'
 import endfield_bag from './assets/endfield_bag.png'
+import individual from './assets/individual.png'
 
 // Экспортируем все картинки как единый объект
 export const IMAGES = {
@@ -90,6 +91,8 @@ export const IMAGES = {
     gift_box: gift_box,
     shopper_set: shopper_set,
     endfield_bag: endfield_bag,
+    individual: individual,
+    
 
 
 

@@ -626,7 +626,7 @@ export const products = [
       name: "Товар по запросу",
       game: "Индивидуально",
       price: 9999,
-      img: "❓",
+      img: IMAGES.individual,
       desc: "Вы можете выбрать этот товар, перейти в корзину и менеджер свяжется с вами.",
       tgLink: "https://t.me/telegram/manager",
       isAvailable: true

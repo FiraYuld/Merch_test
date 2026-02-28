@@ -41,6 +41,7 @@ function App() {
   const [isAgeVerified, setIsAgeVerified] = useState(false);
   const [selectedOptionIndex, setSelectedOptionIndex] = useState(0);
   const [searchQuery, setSearchQuery] = useState("");
+  const [isCategoriesExpanded, setIsCategoriesExpanded] = useState(false);
 
   // 🆕 Эти эффекты автоматически сохраняют данные в память при любом их изменении
   useEffect(() => {
@@ -178,19 +179,26 @@ function App() {
   // Потом применяем умный поиск если есть запрос
   if (searchQuery.trim().length > 0) {
     const fuse = new Fuse(filtered, {
-      keys: ["name", "game", "desc"],
-      threshold: 0.45,       // 0 = точное совпадение, 1 = всё подряд. 0.45 — оптимально
-      minMatchCharLength: 2,
-      ignoreLocation: true,  // ищет по всей строке, не только в начале
-    });
+  keys: ["name", "game", "desc"],
+  threshold: 0.35,
+  minMatchCharLength: 3,
+  ignoreLocation: true,
+});
     filtered = fuse.search(searchQuery.trim()).map(result => result.item);
   }
 
   // Сортировка
   const sorted = [...filtered];
-  if (sortOrder === "asc") return sorted.sort((a, b) => a.price - b.price);
-  if (sortOrder === "desc") return sorted.sort((a, b) => b.price - a.price);
-  return sorted;
+
+  // Поднимаем "Индивидуально" всегда наверх
+const individual = sorted.filter(p => p.game === 'Индивидуально');
+const rest = sorted.filter(p => p.game !== 'Индивидуально');
+
+// Сортировка применяется только к остальным товарам, Индивидуально всегда первый
+if (sortOrder === "asc") rest.sort((a, b) => a.price - b.price);
+if (sortOrder === "desc") rest.sort((a, b) => b.price - a.price);
+
+return [...individual, ...rest];
 };
 
   const displayedProducts = getSortedProducts();
@@ -418,35 +426,58 @@ function App() {
   {/* Строка поиска */}
   <div className="search-wrapper">
     <input
-      type="text"
-      className="search-input"
-      placeholder="🔍 Поиск товара..."
-      value={searchQuery}
-      onChange={(e) => setSearchQuery(e.target.value)}
-    />
+  type="search"
+  className="search-input"
+  placeholder="🔍 Поиск товара..."
+  value={searchQuery}
+  onChange={(e) => setSearchQuery(e.target.value)}
+  autoComplete="off"
+  autoCorrect="off"
+  autoCapitalize="off"
+  spellCheck="false"
+/>
     {searchQuery && (
       <button className="search-clear-btn" onClick={() => setSearchQuery("")}>×</button>
     )}
   </div>
 
   {/* Фильтры категорий — скрываем при активном поиске */}
-  {!searchQuery && (
-    <div className="filters">
+{!searchQuery && (
+  <div className="filters-row">
+    <div className={`filters ${isCategoriesExpanded ? 'filters-expanded' : ''}`}>
       {categories.map(cat => (
-        <button key={cat} className={`filter-btn ${activeCategory === cat ? 'active' : ''}`} onClick={() => handleCategoryClick(cat)}>
-          {cat}
-        </button>
+        <button
+  key={cat}
+  className={`filter-btn ${activeCategory === cat ? 'active' : ''} ${cat === 'Индивидуально' ? 'filter-btn-individual' : ''} ${cat === '18+' ? 'filter-btn-18' : ''}`}
+  onClick={() => handleCategoryClick(cat)}
+>
+  {cat}
+</button>
       ))}
     </div>
-  )}
+    <button
+      className="expand-categories-btn"
+      onClick={() => setIsCategoriesExpanded(!isCategoriesExpanded)}
+    >
+      {isCategoriesExpanded ? '↑' : '↓'}
+    </button>
+  </div>
+)}
 
   <div className="sort-wrapper">
-    <select className="sort-select" value={sortOrder} onChange={(e) => setSortOrder(e.target.value)}>
-      <option value="default">Сортировка</option>
-      <option value="asc">Сначала дешевые</option>
-      <option value="desc">Сначала дорогие</option>
-    </select>
-  </div>
+  <button
+    className="sort-btn"
+    onClick={() => {
+      if (sortOrder === "default") setSortOrder("asc");
+      else if (sortOrder === "asc") setSortOrder("desc");
+      else setSortOrder("default");
+    }}
+  >
+    {sortOrder === "default" && "⇅ Сортировка"}
+{sortOrder === "asc" && "▲ Сначала дешевые"}
+{sortOrder === "desc" && "▼ Сначала дорогие"}
+  </button>
+</div>
 </div>
 {searchQuery && (
   <p className="search-results-count">
@@ -454,13 +485,39 @@ function App() {
   </p>
 )}
           <div className="catalog">
-  {displayedProducts.length === 0 ? (
+{displayedProducts.length === 0 ? (
+  <>
     <div className="empty-search">
       <div className="empty-search-icon">🔍</div>
       <p>Ничего не найдено</p>
-      <span>Попробуйте другой запрос</span>
+      <span>Но вы можете заказать любой товар индивидуально!</span>
     </div>
-  ) : (
+    {(() => {
+      const individualProduct = products.find(p => p.game === 'Индивидуально');
+      return individualProduct ? (
+        <div
+          className="product-card individual-hint-card"
+          onClick={() => openModal(individualProduct)}
+          style={{ animationDelay: '0s', cursor: 'pointer' }}
+        >
+          <div className="clickable-area">
+            <div className="product-image" style={{ fontSize: '60px' }}>
+              {individualProduct.img}
+            </div>
+            <div className="product-game">Индивидуально</div>
+            <h3 className="product-name">{individualProduct.name}</h3>
+          </div>
+          <div className="card-bottom">
+            <div className="card-bottom-row">
+              <div className="product-price">{individualProduct.price} ₽</div>
+              <button className="buy-btn-small" onClick={(e) => { e.stopPropagation(); openModal(individualProduct); }}>+</button>
+            </div>
+          </div>
+        </div>
+      ) : null;
+    })()}
+  </>
+) : (
     displayedProducts.map((product) => (
 <div key={product.id} className="product-card" style={{ animationDelay: `${displayedProducts.indexOf(product) * 0.08}s` }}>        <div className="clickable-area" onClick={() => openModal(product)}>
           <div className="product-image">
