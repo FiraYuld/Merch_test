@@ -142,8 +142,6 @@ body {
   font-size: 50px;
 }
 
-.product-image img { width: 100%; height: 100%; object-fit: cover; }
-
 .product-game {
   font-size: 9px;
   color: #D8548C;
@@ -166,9 +164,25 @@ body {
 
 .card-bottom {
   display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.card-bottom-row {
+  display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 10px; 
+}
+
+.in-cart-badge {
+  font-size: 11px;
+  font-weight: 700;
+  color: #ffffff;
+  background-color: #D8548C;
+  padding: 3px 8px;
+  border-radius: 20px;
+  align-self: flex-start;
 }
 
 .product-price {
@@ -179,18 +193,22 @@ body {
 
 .buy-btn-small {
   background-color: #D8548C;
-  color: #ffffff; 
+  color: #ffffff;
   border: none;
   width: 36px;
   height: 36px;
   border-radius: 12px;
-  font-size: 26px;
+  font-size: 20px;
   font-weight: 400;
-  line-height: 1;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 0;
+  margin: 0;
+  -webkit-appearance: none;
+  appearance: none;
+  flex-shrink: 0;
 }
 
 .buy-btn-small.disabled-small {
@@ -307,3 +325,119 @@ body {
 .age-icon { font-size: 60px; margin-bottom: 10px; }
 .deny-btn { background-color: #f4f4f7; color: #8E8E93; }
 .confirm-btn { background-color: #D8548C; }
+
+/* --- Поиск --- */
+.search-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.search-input {
+  width: 100%;
+  padding: 11px 40px 11px 15px;
+  border-radius: 15px;
+  border: 1px solid #e1e1e8;
+  background-color: #f4f4f7;
+  font-size: 15px;
+  outline: none;
+  box-sizing: border-box;
+  color: #2D2D32;
+  transition: border-color 0.2s;
+}
+
+.search-input:focus {
+  border-color: #D8548C;
+}
+
+.search-clear-btn {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  font-size: 22px;
+  color: #8E8E93;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0;
+}
+
+/* --- Пустой поиск --- */
+.empty-search {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 40px 20px;
+  color: #8E8E93;
+}
+
+.empty-search-icon {
+  font-size: 48px;
+  margin-bottom: 10px;
+}
+
+.empty-search p {
+  font-size: 16px;
+  font-weight: 700;
+  color: #2D2D32;
+  margin: 0 0 4px 0;
+}
+
+.empty-search span {
+  font-size: 13px;
+}
+
+/* --- Анимация карточек --- */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.product-card {
+  animation: fadeInUp 0.3s ease both;
+}
+
+.product-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: opacity 0.3s ease;
+}
+
+.product-image img.loading {
+  opacity: 0;
+}
+
+.product-image img.loaded {
+  opacity: 1;
+}
+
+.search-results-count {
+  font-size: 13px;
+  color: #8E8E93;
+  font-weight: 600;
+  margin: -10px 0 10px 0;
+}
+
+.clear-cart-btn {
+  background: none;
+  border: 1px solid #e1e1e8;
+  color: #8E8E93;
+  padding: 7px 12px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.clear-cart-btn:active {
+  background-color: #ffebee;
+  border-color: #ef9a9a;
+  color: #c62828;
+}

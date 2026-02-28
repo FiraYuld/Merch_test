@@ -1,3 +1,4 @@
+import Fuse from 'fuse.js';
 import { useState, useEffect } from 'react';
 import './App.css';
 import { products, categories } from './products';
@@ -39,6 +40,7 @@ function App() {
   const [showAgeModal, setShowAgeModal] = useState(false);
   const [isAgeVerified, setIsAgeVerified] = useState(false);
   const [selectedOptionIndex, setSelectedOptionIndex] = useState(0);
+  const [searchQuery, setSearchQuery] = useState("");
 
   // 🆕 Эти эффекты автоматически сохраняют данные в память при любом их изменении
   useEffect(() => {
@@ -155,25 +157,41 @@ function App() {
   };
 
   const getSortedProducts = () => {
-    let filtered = products.filter(product => {
-      // Превращаем одиночную категорию в массив, чтобы логика была единой
-      const gameArray = Array.isArray(product.game) ? product.game : [product.game];
-      
-      if (activeCategory === "Все") {
-        return !gameArray.includes("18+"); // Скрываем 18+ из "Все"
-      } else {
-        return gameArray.includes(activeCategory); // Ищем совпадение
-      }
-    });
+  let filtered = products.filter(product => {
+    const gameArray = Array.isArray(product.game) ? product.game : [product.game];
 
-    const sorted = [...filtered]; 
-    if (sortOrder === "asc") {
-      return sorted.sort((a, b) => a.price - b.price);
-    } else if (sortOrder === "desc") {
-      return sorted.sort((a, b) => b.price - a.price);
+    // Если идёт поиск — показываем всё (18+ только если верифицирован)
+    if (searchQuery.trim().length > 0) {
+      if (gameArray.includes("18+") && !isAgeVerified) return false;
+      return true;
     }
-    return sorted;
-  };
+
+    // Обычная фильтрация по категории
+    if (activeCategory === "Все") {
+      return !gameArray.includes("18+");
+    } else {
+      return gameArray.includes(activeCategory);
+    }
+  });
+  // ... остальное не трогаем
+
+  // Потом применяем умный поиск если есть запрос
+  if (searchQuery.trim().length > 0) {
+    const fuse = new Fuse(filtered, {
+      keys: ["name", "game", "desc"],
+      threshold: 0.45,       // 0 = точное совпадение, 1 = всё подряд. 0.45 — оптимально
+      minMatchCharLength: 2,
+      ignoreLocation: true,  // ищет по всей строке, не только в начале
+    });
+    filtered = fuse.search(searchQuery.trim()).map(result => result.item);
+  }
+
+  // Сортировка
+  const sorted = [...filtered];
+  if (sortOrder === "asc") return sorted.sort((a, b) => a.price - b.price);
+  if (sortOrder === "desc") return sorted.sort((a, b) => b.price - a.price);
+  return sorted;
+};
 
   const displayedProducts = getSortedProducts();
   const subtotalPrice = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
@@ -314,8 +332,17 @@ function App() {
       {/* Корзина */}
       {isCartOpen ? (
         <div className="cart-view">
-          <h2>Оформление заказа</h2>
-          {cart.length === 0 ? (
+<div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+  <h2 style={{ margin: 0 }}>Оформление заказа</h2>
+  {cart.length > 0 && (
+    <button className="clear-cart-btn" onClick={() => {
+      setCart([]);
+      localStorage.removeItem('sheepCart');
+    }}>
+      🗑 Очистить
+    </button>
+  )}
+</div>          {cart.length === 0 ? (
             <p className="empty-cart">В корзине пока пусто...</p>
           ) : (
             <>
@@ -344,8 +371,18 @@ function App() {
               </div>
 
               <div className="promo-section">
-                <input type="text" placeholder="Промокод" value={promoInput} onChange={(e) => setPromoInput(e.target.value)} />
-                <button onClick={handleApplyPromo}>Применить</button>
+<input
+  type="text"
+  placeholder="Промокод"
+  value={promoInput}
+  onChange={(e) => {
+    setPromoInput(e.target.value);
+    if (e.target.value.trim() === '') {
+      setAppliedPromo(null);
+      setDiscountPercent(0);
+    }
+  }}
+/>                <button onClick={handleApplyPromo}>Применить</button>
               </div>
 
               <div className="user-form">
@@ -377,69 +414,114 @@ function App() {
         </div>
       ) : (
         <>
-          <div className="filters-container">
-            <div className="filters">
-                {categories.map(cat => (
-                <button key={cat} className={`filter-btn ${activeCategory === cat ? 'active' : ''}`} onClick={() => handleCategoryClick(cat)}>
-                    {cat}
-                </button>
-                ))}
-            </div>
-            <div className="sort-wrapper">
-                <select className="sort-select" value={sortOrder} onChange={(e) => setSortOrder(e.target.value)}>
-                    <option value="default">Сортировка</option>
-                    <option value="asc">Сначала дешевые</option>
-                    <option value="desc">Сначала дорогие</option>
-                </select>
-            </div>
+<div className="filters-container">
+  {/* Строка поиска */}
+  <div className="search-wrapper">
+    <input
+      type="text"
+      className="search-input"
+      placeholder="🔍 Поиск товара..."
+      value={searchQuery}
+      onChange={(e) => setSearchQuery(e.target.value)}
+    />
+    {searchQuery && (
+      <button className="search-clear-btn" onClick={() => setSearchQuery("")}>×</button>
+    )}
+  </div>
+
+  {/* Фильтры категорий — скрываем при активном поиске */}
+  {!searchQuery && (
+    <div className="filters">
+      {categories.map(cat => (
+        <button key={cat} className={`filter-btn ${activeCategory === cat ? 'active' : ''}`} onClick={() => handleCategoryClick(cat)}>
+          {cat}
+        </button>
+      ))}
+    </div>
+  )}
+
+  <div className="sort-wrapper">
+    <select className="sort-select" value={sortOrder} onChange={(e) => setSortOrder(e.target.value)}>
+      <option value="default">Сортировка</option>
+      <option value="asc">Сначала дешевые</option>
+      <option value="desc">Сначала дорогие</option>
+    </select>
+  </div>
+</div>
+{searchQuery && (
+  <p className="search-results-count">
+    Найдено: {displayedProducts.length} товаров
+  </p>
+)}
+          <div className="catalog">
+  {displayedProducts.length === 0 ? (
+    <div className="empty-search">
+      <div className="empty-search-icon">🔍</div>
+      <p>Ничего не найдено</p>
+      <span>Попробуйте другой запрос</span>
+    </div>
+  ) : (
+    displayedProducts.map((product) => (
+<div key={product.id} className="product-card" style={{ animationDelay: `${displayedProducts.indexOf(product) * 0.08}s` }}>        <div className="clickable-area" onClick={() => openModal(product)}>
+          <div className="product-image">
+            {product.img && typeof product.img === 'string' && product.img.length > 5 ? (
+<img
+  src={product.img}
+  alt={product.name}
+  className="loading"
+  onLoad={(e) => {
+    e.target.classList.remove('loading');
+    e.target.classList.add('loaded');
+  }}
+/>            ) : (
+              product.img
+            )}
           </div>
 
-          <div className="catalog">
-            {displayedProducts.map((product) => (
-              <div key={product.id} className="product-card">
-                <div className="clickable-area" onClick={() => openModal(product)}>
-                  <div className="product-image">
-                    {product.img && typeof product.img === 'string' && product.img.length > 5 ? (
-                        <img src={product.img} alt={product.name} /> 
-                    ) : (
-                        product.img
-                    )}
-                  </div>
-                  
-                  {/* 🆕 Поддержка мультикатегорий в каталоге */}
-                  <div className="product-game">
-                      {Array.isArray(product.game) ? product.game.join(', ') : product.game}
-                  </div>
-                  
-                  <h3 className="product-name">{product.name}</h3>
-                </div>
-                
-                <div className="card-bottom">
-                  <div className="product-price">
-                    {product.options && product.options.length > 0
-                        ? `от ${Math.min(...product.options.map(o => o.price))} ₽`
-                        : `${product.price} ₽`}
-                  </div>
-                  <button 
-                    className={`buy-btn-small ${product.isAvailable === false ? 'disabled-small' : ''}`} 
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        if(product.isAvailable !== false) {
-                            if (product.options && product.options.length > 0) {
-                                openModal(product);
-                            } else {
-                                addToCart(product);
-                            }
-                        }
-                    }}
-                    disabled={product.isAvailable === false}
-                  >
-                    {product.isAvailable === false ? "🚫" : "+"}
-                  </button>
-                </div>
-              </div>
-            ))}
+          <div className="product-game">
+            {Array.isArray(product.game) ? product.game.join(', ') : product.game}
           </div>
+
+          <h3 className="product-name">{product.name}</h3>
+        </div>
+
+        <div className="card-bottom">
+          {(() => {
+            const inCart = cart.filter(item => item.id === product.id);
+            const totalQty = inCart.reduce((sum, item) => sum + item.quantity, 0);
+            return totalQty > 0 ? (
+              <div className="in-cart-badge">✓ {totalQty} в корзине</div>
+            ) : null;
+          })()}
+
+          <div className="card-bottom-row">
+            <div className="product-price">
+              {product.options && product.options.length > 0
+                ? `от ${Math.min(...product.options.map(o => o.price))} ₽`
+                : `${product.price} ₽`}
+            </div>
+            <button
+              className={`buy-btn-small ${product.isAvailable === false ? 'disabled-small' : ''}`}
+              onClick={(e) => {
+                e.stopPropagation();
+                if (product.isAvailable !== false) {
+                  if (product.options && product.options.length > 0) {
+                    openModal(product);
+                  } else {
+                    addToCart(product);
+                  }
+                }
+              }}
+              disabled={product.isAvailable === false}
+            >
+              {product.isAvailable === false ? "🚫" : (product.options && product.options.length > 0 ? "☰" : "+")}
+            </button>
+          </div>
+        </div>
+      </div>
+    ))
+  )}
+</div>
         </>
       )}
     </div>
