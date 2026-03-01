@@ -68,11 +68,11 @@ function App() {
     setSelectedOptionIndex(0);
   };
 
-  const addToCart = (product, selectedOption = null) => {
-    if (product.isAvailable === false) {
-      showToast("❌ Товар временно недоступен");
-      return;
-    }
+const addToCart = (product, selectedOption = null) => {
+  if (product.isAvailable === false) {
+    showToast("❌ Товар временно недоступен");
+    return;
+  }
 
     const cartItemId = selectedOption ? `${product.id}-${selectedOption.name}` : String(product.id);
     const itemPrice = selectedOption ? selectedOption.price : product.price;
@@ -92,8 +92,17 @@ function App() {
       }
     });
     
-    showToast(`✅ Добавлено: ${product.name} ${selectedOption ? `(${selectedOption.name})` : ''}`);
-  };
+showToast(`✅ Добавлено: ${product.name} ${selectedOption ? `(${selectedOption.name})` : ''}`);
+
+  // Пульсация кнопки
+  const btn = document.querySelector(`[data-id="${product.id}"]`);
+  if (btn) {
+    btn.classList.remove('pulse');
+    void btn.offsetWidth;
+    btn.classList.add('pulse');
+    setTimeout(() => btn.classList.remove('pulse'), 400);
+  }
+};
 
   const removeFromCart = (cartItemId) => {
     setCart((prevCart) => {
@@ -174,7 +183,6 @@ function App() {
       return gameArray.includes(activeCategory);
     }
   });
-  // ... остальное не трогаем
 
   // Потом применяем умный поиск если есть запрос
   if (searchQuery.trim().length > 0) {
@@ -495,25 +503,38 @@ return [...individual, ...rest];
     {(() => {
       const individualProduct = products.find(p => p.game === 'Индивидуально');
       return individualProduct ? (
-        <div
-          className="product-card individual-hint-card"
-          onClick={() => openModal(individualProduct)}
-          style={{ animationDelay: '0s', cursor: 'pointer' }}
-        >
-          <div className="clickable-area">
-            <div className="product-image" style={{ fontSize: '60px' }}>
-              {individualProduct.img}
-            </div>
-            <div className="product-game">Индивидуально</div>
-            <h3 className="product-name">{individualProduct.name}</h3>
-          </div>
-          <div className="card-bottom">
-            <div className="card-bottom-row">
-              <div className="product-price">{individualProduct.price} ₽</div>
-              <button className="buy-btn-small" onClick={(e) => { e.stopPropagation(); openModal(individualProduct); }}>+</button>
-            </div>
-          </div>
-        </div>
+       <div
+  className="product-card individual-hint-card"
+  onClick={() => openModal(individualProduct)}
+  style={{ animationDelay: '0s', cursor: 'pointer' }}
+>
+  <div className="clickable-area">
+    <div className="product-image">
+      {individualProduct.img && typeof individualProduct.img === 'string' && individualProduct.img.length > 5 ? (
+        <img
+          src={individualProduct.img}
+          alt={individualProduct.name}
+          loading="lazy"
+          className="loading"
+          onLoad={(e) => {
+            e.target.classList.remove('loading');
+            e.target.classList.add('loaded');
+          }}
+        />
+      ) : (
+        individualProduct.img
+      )}
+    </div>
+    <div className="product-game">Индивидуально</div>
+    <h3 className="product-name">{individualProduct.name}</h3>
+  </div>
+  <div className="card-bottom">
+    <div className="card-bottom-row">
+      <div className="product-price">{individualProduct.price} ₽</div>
+      <button className="buy-btn-small" onClick={(e) => { e.stopPropagation(); openModal(individualProduct); }}>+</button>
+    </div>
+  </div>
+</div>
       ) : null;
     })()}
   </>
@@ -526,11 +547,13 @@ return [...individual, ...rest];
   src={product.img}
   alt={product.name}
   className="loading"
+  loading="lazy"
   onLoad={(e) => {
     e.target.classList.remove('loading');
     e.target.classList.add('loaded');
   }}
-/>            ) : (
+/>
+  ) : (
               product.img
             )}
           </div>
@@ -558,8 +581,9 @@ return [...individual, ...rest];
                 : `${product.price} ₽`}
             </div>
             <button
-              className={`buy-btn-small ${product.isAvailable === false ? 'disabled-small' : ''}`}
-              onClick={(e) => {
+  className={`buy-btn-small ${product.isAvailable === false ? 'disabled-small' : ''}`}
+  data-id={product.id}
+  onClick={(e) => {
                 e.stopPropagation();
                 if (product.isAvailable !== false) {
                   if (product.options && product.options.length > 0) {

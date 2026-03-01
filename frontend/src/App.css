@@ -76,7 +76,6 @@ body {
   flex-wrap: nowrap;
   transition: all 0.3s ease;
 }
-.filters::-webkit-scrollbar { display: none; }
 
 .filters.filters-expanded {
   flex-wrap: wrap;
@@ -336,8 +335,24 @@ body {
 .modal-buy-btn.disabled-btn { background-color: #e1e1e8; color: #8E8E93; cursor: not-allowed; }
 
 /* Уведомление */
-.toast { position: fixed; top: -100px; left: 50%; transform: translateX(-50%); background-color: #F3D067; color: #4A3A00; padding: 12px 24px; border-radius: 30px; font-weight: bold; box-shadow: 0 5px 15px rgba(243, 208, 103, 0.3); transition: top 0.4s ease; z-index: 2000; }
-.toast.show { top: 20px; }
+.toast {
+  position: fixed;
+  bottom: -100px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #F3D067;
+  color: #4A3A00;
+  padding: 12px 24px;
+  border-radius: 30px;
+  font-weight: bold;
+  box-shadow: 0 5px 15px rgba(243, 208, 103, 0.3);
+  transition: bottom 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  z-index: 2000;
+}
+
+.toast.show {
+  bottom: 30px;
+}
 
 /* === СТИЛИ ДЛЯ ОКНА 18+ === */
 .age-modal-overlay { z-index: 2000; background-color: rgba(0, 0, 0, 0.9); }
@@ -537,4 +552,14 @@ body {
   background-color: #D8548C;
   color: white;
   border-color: #D8548C;
+}
+
+@keyframes btnPulse {
+  0% { transform: scale(1); background-color: #D8548C; }
+  40% { transform: scale(1.2); background-color: #f07aaa; }
+  100% { transform: scale(1); background-color: #D8548C; }
+}
+
+.buy-btn-small.pulse {
+  animation: btnPulse 0.4s ease;
 }

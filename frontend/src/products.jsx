@@ -627,8 +627,8 @@ export const products = [
       game: "Индивидуально",
       price: 9999,
       img: IMAGES.individual,
-      desc: "Вы можете выбрать этот товар, перейти в корзину и менеджер свяжется с вами.",
-      tgLink: "https://t.me/telegram/manager",
+      desc: "Если вы не нашли что хотели, то выбирайте этот товар и менеджер свяжется с вами. Будьте готовы прислать ссылку или фото нужного вам товара. ",
+      tgLink: "https://t.me/sheep2me_mg",
       isAvailable: true
     }
 ];
