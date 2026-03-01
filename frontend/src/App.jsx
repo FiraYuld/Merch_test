@@ -42,6 +42,8 @@ function App() {
   const [selectedOptionIndex, setSelectedOptionIndex] = useState(0);
   const [searchQuery, setSearchQuery] = useState("");
   const [isCategoriesExpanded, setIsCategoriesExpanded] = useState(false);
+  const [showClearConfirm, setShowClearConfirm] = useState(false);
+  const [removingItems, setRemovingItems] = useState([]);
 
   // 🆕 Эти эффекты автоматически сохраняют данные в память при любом их изменении
   useEffect(() => {
@@ -91,8 +93,13 @@ const addToCart = (product, selectedOption = null) => {
         return [...prevCart, { ...product, cartItemId, price: itemPrice, img: itemImg, selectedOption, quantity: 1 }];
       }
     });
-    
+    // Вибрация через Telegram
+if (window.Telegram?.WebApp?.HapticFeedback) {
+  window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
+}
+
 showToast(`✅ Добавлено: ${product.name} ${selectedOption ? `(${selectedOption.name})` : ''}`);
+
 
   // Пульсация кнопки
   const btn = document.querySelector(`[data-id="${product.id}"]`);
@@ -105,17 +112,22 @@ showToast(`✅ Добавлено: ${product.name} ${selectedOption ? `(${select
 };
 
   const removeFromCart = (cartItemId) => {
-    setCart((prevCart) => {
-      const existingItem = prevCart.find(item => item.cartItemId === cartItemId);
-      if (existingItem.quantity === 1) {
-        return prevCart.filter(item => item.cartItemId !== cartItemId);
-      } else {
-        return prevCart.map(item => 
-          item.cartItemId === cartItemId ? { ...item, quantity: item.quantity - 1 } : item 
-        );
-      }
-    });
-  };
+  setCart((prevCart) => {
+    const existingItem = prevCart.find(item => item.cartItemId === cartItemId);
+    if (existingItem.quantity === 1) {
+      setRemovingItems(prev => [...prev, cartItemId]);
+      setTimeout(() => {
+        setCart(prev => prev.filter(item => item.cartItemId !== cartItemId));
+        setRemovingItems(prev => prev.filter(id => id !== cartItemId));
+      }, 300);
+      return prevCart;
+    } else {
+      return prevCart.map(item =>
+        item.cartItemId === cartItemId ? { ...item, quantity: item.quantity - 1 } : item
+      );
+    }
+  });
+};
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -143,17 +155,19 @@ showToast(`✅ Добавлено: ${product.name} ${selectedOption ? `(${select
     }
   };
 
-  const handleCategoryClick = (cat) => {
-    if (cat === "18+") {
-      if (isAgeVerified) {
-        setActiveCategory(cat);
-      } else {
-        setShowAgeModal(true);
-      }
-    } else {
+const handleCategoryClick = (cat) => {
+  if (cat === "18+") {
+    if (isAgeVerified) {
       setActiveCategory(cat);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      setShowAgeModal(true);
     }
-  };
+  } else {
+    setActiveCategory(cat);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+};
 
   const confirmAge = () => {
     setIsAgeVerified(true);
@@ -262,9 +276,14 @@ return [...individual, ...rest];
             <img src={IMAGES.logo} alt="Logo" className="app-logo" />
             <h1>Sheep To Me</h1>
         </div>
-        <button className="cart-btn" onClick={() => setIsCartOpen(!isCartOpen)}>
-          {isCartOpen ? "Закрыть" : `🛒 Корзина (${totalItems})`}
-        </button>
+        <button className="cart-btn" onClick={() => {
+  setIsCartOpen(!isCartOpen);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}}>
+  {isCartOpen ? "Закрыть" : (
+    <>🛒 Корзина (<span key={totalItems} className="cart-count">{totalItems}</span>)</>
+  )}
+</button>
       </header>
 
       {/* Окно 18+ */}
@@ -282,19 +301,22 @@ return [...individual, ...rest];
         </div>
       )}
 
-      {/* Модальное окно товара */}
-      {selectedProduct && (
-        <div className="modal-overlay" onClick={() => setSelectedProduct(null)}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <button className="close-modal" onClick={() => setSelectedProduct(null)}>×</button>
-            <div className="modal-img">
-              {currentModalImg && typeof currentModalImg === 'string' && currentModalImg.length > 5 ? (
-                <img src={currentModalImg} alt={selectedProduct.name} />
-              ) : (
-                currentModalImg
-              )}
-            </div>
-            <h2>{selectedProduct.name}</h2>
+     {/* Модальное окно товара */}
+{selectedProduct && (
+  <div className="modal-overlay" onClick={() => setSelectedProduct(null)}>
+    <div
+  className="modal-content"
+  onClick={(e) => e.stopPropagation()}
+>
+      <button className="close-modal" onClick={() => setSelectedProduct(null)}>×</button>
+      <div className="modal-img">
+        {currentModalImg && typeof currentModalImg === 'string' && currentModalImg.length > 5 ? (
+          <img src={currentModalImg} alt={selectedProduct.name} />
+        ) : (
+          currentModalImg
+        )}
+      </div>
+      <h2>{selectedProduct.name}</h2>
             
             {/* 🆕 Поддержка мультикатегорий в модалке */}
             <div className="modal-game">
@@ -349,23 +371,47 @@ return [...individual, ...rest];
       {isCartOpen ? (
         <div className="cart-view">
 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-  <h2 style={{ margin: 0 }}>Оформление заказа</h2>
+  <button className="back-to-catalog-btn" onClick={() => setIsCartOpen(false)}>
+    ← Каталог
+  </button>
   {cart.length > 0 && (
-    <button className="clear-cart-btn" onClick={() => {
-      setCart([]);
-      localStorage.removeItem('sheepCart');
-    }}>
-      🗑 Очистить
-    </button>
+    <button className="clear-cart-btn" onClick={() => setShowClearConfirm(true)}>
+  🗑 Очистить
+</button>
   )}
-</div>          {cart.length === 0 ? (
+  {showClearConfirm && (
+  <div className="modal-overlay" onClick={() => setShowClearConfirm(false)}>
+    <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+      <div style={{ fontSize: '48px', marginBottom: '10px' }}>🗑</div>
+      <h2>Очистить корзину?</h2>
+      <p style={{ color: '#8E8E93', fontSize: '14px', margin: '8px 0 24px' }}>
+        Все товары будут удалены
+      </p>
+      <div className="modal-buttons-row">
+        <button className="modal-info-btn" onClick={() => setShowClearConfirm(false)}>
+          Отмена
+        </button>
+        <button className="modal-buy-btn" style={{ backgroundColor: '#ff4d4d' }} onClick={() => {
+          setCart([]);
+          localStorage.removeItem('sheepCart');
+          setShowClearConfirm(false);
+        }}>
+          Очистить
+        </button>
+      </div>
+    </div>
+  </div>
+)}
+</div>
+<h2 style={{ margin: '0 0 16px 0' }}>Оформление заказа</h2>
+
+{cart.length === 0 ? (
             <p className="empty-cart">В корзине пока пусто...</p>
           ) : (
             <>
               <div className="cart-items-list">
                 {cart.map((item) => (
-                  <div key={item.cartItemId} className="cart-item">
-                    <div className="cart-item-img">
+<div key={item.cartItemId} className={`cart-item ${removingItems.includes(item.cartItemId) ? 'cart-item-removing' : ''}`}>                    <div className="cart-item-img">
                       {item.img && typeof item.img === 'string' && item.img.length > 5 ? <img src={item.img} alt={item.name} /> : item.img}
                     </div>
                     <div className="cart-item-info">
@@ -418,8 +464,19 @@ return [...individual, ...rest];
                 )}
                 <h3>Итого: <span>{totalPrice} ₽</span></h3>
                 {!isMinOrderReached && (
-                  <div className="min-order-warning">⚠️ Минимальная сумма заказа: {MIN_ORDER_AMOUNT} ₽</div>
-                )}
+  <div className="min-order-progress">
+    <div className="min-order-progress-text">
+      <span>До минимального заказа:</span>
+      <span className="min-order-remain">{MIN_ORDER_AMOUNT - totalPrice} ₽</span>
+    </div>
+    <div className="min-order-progress-bar">
+      <div
+        className="min-order-progress-fill"
+        style={{ width: `${Math.min((totalPrice / MIN_ORDER_AMOUNT) * 100, 100)}%` }}
+      />
+    </div>
+  </div>
+)}
                 <button className={`checkout-btn ${!isFormValid ? 'disabled' : ''}`} onClick={handleCheckout} disabled={!isFormValid}>
                   {isFormValid ? "🚀 Подтвердить заказ" : "Заполните все поля"}
                 </button>
