@@ -2,7 +2,21 @@ import Fuse from 'fuse.js';
 import { useState, useEffect, useMemo, useRef } from 'react';
 import './App.css';
 import { products, categories } from './products';
-import { IMAGES } from './images';
+
+import {
+  Header,
+  Toast,
+  FlyingItem,
+  AgeModal,
+  ProductModal,
+  SearchBar,
+  CategoryFilter,
+  SortButton,
+  CartView,
+  Catalog,
+  OrderHistoryModal,
+  ScrollTopButton
+} from './components';
 
 const PROMO_CODES = {
   "СОННЫЙ": 0.02,
@@ -12,7 +26,6 @@ const TERMS_LINK = "https://t.me/durov";
 const MIN_ORDER_AMOUNT = 1500;
 
 function App() {
-  // 🆕 Умная корзина: при запуске ищет сохраненные товары
   const [cart, setCart] = useState(() => {
     const savedCart = localStorage.getItem('sheepCart');
     return savedCart ? JSON.parse(savedCart) : [];
@@ -29,7 +42,6 @@ function App() {
   const [discountPercent, setDiscountPercent] = useState(0);
   const [orderComment, setOrderComment] = useState("");
 
-  // 🆕 Умные данные: запоминает ФИО и адрес
   const [userData, setUserData] = useState(() => {
     const savedUser = localStorage.getItem('sheepUser');
     return savedUser ? JSON.parse(savedUser) : { name: '', phone: '', city: '' };
@@ -47,14 +59,13 @@ function App() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const cartBtnRef = useRef(null);
 
-  // История заказов
   const [orderHistory, setOrderHistory] = useState(() => {
     const savedHistory = localStorage.getItem('sheepOrderHistory');
     return savedHistory ? JSON.parse(savedHistory) : [];
   });
   const [showOrderHistory, setShowOrderHistory] = useState(false);
 
-  // 🆕 Эти эффекты автоматически сохраняют данные в память при любом их изменении
+  // Effects
   useEffect(() => {
     localStorage.setItem('sheepCart', JSON.stringify(cart));
   }, [cart]);
@@ -81,6 +92,7 @@ function App() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Handlers
   const showToast = (message) => {
     setToast(message);
     setTimeout(() => setToast(""), 2000);
@@ -118,7 +130,6 @@ function App() {
     const itemPrice = selectedOption ? selectedOption.price : product.price;
     const itemImg = (selectedOption && selectedOption.img) ? selectedOption.img : product.img;
 
-    // Анимация полёта
     if (sourceElement && typeof itemImg === 'string') {
       animateFlyToCart(itemImg, sourceElement);
     }
@@ -224,6 +235,7 @@ function App() {
     setShowAgeModal(false);
   };
 
+  // Computed values
   const displayedProducts = useMemo(() => {
     let filtered = products.filter(product => {
       const gameArray = Array.isArray(product.game) ? product.game : [product.game];
@@ -287,7 +299,6 @@ function App() {
       user: userData
     };
 
-    // Сохраняем заказ в историю
     const historyEntry = {
       id: Date.now(),
       date: new Date().toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' }),
@@ -313,335 +324,88 @@ function App() {
     }
   };
 
-  // Вычисляем текущую картинку для модалки: если выбрана опция с картинкой — показываем её
   const currentModalImg = selectedProduct && selectedProduct.options && selectedProduct.options[selectedOptionIndex]?.img
     ? selectedProduct.options[selectedOptionIndex].img
     : selectedProduct?.img;
 
   return (
     <div className="app-container">
-      <div className={`toast ${toast ? 'show' : ''}`}>{toast}</div>
+      <Toast message={toast} />
+      <FlyingItem flyingItem={flyingItem} />
 
-      {flyingItem && (
-        <div
-          className="flying-item"
-          style={{
-            '--start-x': `${flyingItem.startX}px`,
-            '--start-y': `${flyingItem.startY}px`,
-            '--end-x': `${flyingItem.endX}px`,
-            '--end-y': `${flyingItem.endY}px`,
-          }}
-        >
-          <img src={flyingItem.img} alt="" />
-        </div>
-      )}
+      <Header
+        totalItems={totalItems}
+        isCartOpen={isCartOpen}
+        setIsCartOpen={setIsCartOpen}
+        cartBtnRef={cartBtnRef}
+      />
 
-      <header className="header">
-        <div className="logo-container">
-          <img src={IMAGES.logo} alt="Logo" className="app-logo" />
-          <h1>Sheep To Me</h1>
-        </div>
-        <button
-          ref={cartBtnRef}
-          className="cart-btn"
-          onClick={() => {
-            setIsCartOpen(!isCartOpen);
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-          }}
-        >
-          {isCartOpen ? "Закрыть" : (
-            <>🛒 Корзина (<span key={totalItems} className="cart-count">{totalItems}</span>)</>
-          )}
-        </button>
-      </header>
-
-      {/* Окно 18+ */}
       {showAgeModal && (
-        <div className="modal-overlay age-modal-overlay">
-          <div className="modal-content age-modal-content">
-            <div className="age-icon">🔞</div>
-            <h2>Вам есть 18 лет?</h2>
-            <p>Этот раздел содержит товары для взрослых. Пожалуйста, подтвердите ваш возраст.</p>
-            <div className="modal-buttons-row">
-              <button className="modal-info-btn deny-btn" onClick={denyAge}>Нет</button>
-              <button className="modal-buy-btn confirm-btn" onClick={confirmAge}>Да, мне 18+</button>
-            </div>
-          </div>
-        </div>
+        <AgeModal onConfirm={confirmAge} onDeny={denyAge} />
       )}
 
-      {/* Модальное окно товара */}
       {selectedProduct && (
-        <div className="modal-overlay" onClick={() => setSelectedProduct(null)}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <button className="close-modal" onClick={() => setSelectedProduct(null)}>×</button>
-            <div className="modal-img">
-              {currentModalImg && typeof currentModalImg === 'string' && currentModalImg.length > 5 ? (
-                <img src={currentModalImg} alt={selectedProduct.name} />
-              ) : (
-                currentModalImg
-              )}
-            </div>
-            <h2>{selectedProduct.name}</h2>
-
-            <div className="modal-game">
-              {Array.isArray(selectedProduct.game) ? selectedProduct.game.join(', ') : selectedProduct.game}
-            </div>
-
-            <p className="modal-desc">{selectedProduct.desc}</p>
-
-            <div className="modal-price">
-              {selectedProduct.options && selectedProduct.options.length > 0
-                ? `${selectedProduct.options[selectedOptionIndex].price} ₽`
-                : `${selectedProduct.price} ₽`}
-            </div>
-
-            <div className="modal-buttons-row">
-              {selectedProduct.options && selectedProduct.options.length > 0 && (
-                <select
-                  className="modal-option-select"
-                  value={selectedOptionIndex}
-                  onChange={(e) => setSelectedOptionIndex(Number(e.target.value))}
-                >
-                  {selectedProduct.options.map((opt, idx) => (
-                    <option key={idx} value={idx}>{opt.name}</option>
-                  ))}
-                </select>
-              )}
-
-              <button className="modal-info-btn" onClick={() => openInfoLink(selectedProduct.tgLink)}>
-                ℹ️ О товаре
-              </button>
-
-              <button
-                className={`modal-buy-btn ${selectedProduct.isAvailable === false ? 'disabled-btn' : ''}`}
-                onClick={(e) => {
-                  if (selectedProduct.isAvailable !== false) {
-                    const opt = selectedProduct.options ? selectedProduct.options[selectedOptionIndex] : null;
-                    const imgEl = e.target.closest('.modal-content')?.querySelector('.modal-img');
-                    addToCart(selectedProduct, opt, imgEl);
-                    setSelectedProduct(null);
-                  }
-                }}
-                disabled={selectedProduct.isAvailable === false}
-              >
-                {selectedProduct.isAvailable === false ? "Нет в наличии" : "+ В корзину"}
-              </button>
-            </div>
-          </div>
-        </div>
+        <ProductModal
+          product={selectedProduct}
+          currentImg={currentModalImg}
+          selectedOptionIndex={selectedOptionIndex}
+          setSelectedOptionIndex={setSelectedOptionIndex}
+          onClose={() => setSelectedProduct(null)}
+          onAddToCart={addToCart}
+          onOpenInfo={openInfoLink}
+        />
       )}
 
-      {/* Корзина */}
       {isCartOpen ? (
-        <div className="cart-view">
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-            <button className="back-to-catalog-btn" onClick={() => setIsCartOpen(false)}>
-              ← Каталог
-            </button>
-            {cart.length > 0 && (
-              <button className="clear-cart-btn" onClick={() => setShowClearConfirm(true)}>
-                🗑 Очистить
-              </button>
-            )}
-            {showClearConfirm && (
-              <div className="modal-overlay" onClick={() => setShowClearConfirm(false)}>
-                <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-                  <div style={{ fontSize: '48px', marginBottom: '10px' }}>🗑</div>
-                  <h2>Очистить корзину?</h2>
-                  <p style={{ color: '#8E8E93', fontSize: '14px', margin: '8px 0 24px' }}>
-                    Все товары будут удалены
-                  </p>
-                  <div className="modal-buttons-row">
-                    <button className="modal-info-btn" onClick={() => setShowClearConfirm(false)}>
-                      Отмена
-                    </button>
-                    <button
-                      className="modal-buy-btn"
-                      style={{ backgroundColor: '#ff4d4d' }}
-                      onClick={() => {
-                        setCart([]);
-                        localStorage.removeItem('sheepCart');
-                        setShowClearConfirm(false);
-                      }}
-                    >
-                      Очистить
-                    </button>
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-          
-          <h2 style={{ margin: '0 0 16px 0' }}>Оформление заказа</h2>
-
-          {cart.length === 0 ? (
-            <div className="empty-cart-container">
-              <div className="empty-cart-icon">🛒</div>
-              <h3 className="empty-cart-title">Корзина пуста</h3>
-              <p className="empty-cart-text">Добавьте товары, чтобы оформить заказ</p>
-              <button className="empty-cart-btn" onClick={() => setIsCartOpen(false)}>
-                Перейти к покупкам
-              </button>
-              {orderHistory.length > 0 && (
-                <button className="order-history-btn" onClick={() => setShowOrderHistory(true)}>
-                  📋 История заказов ({orderHistory.length})
-                </button>
-              )}
-            </div>
-          ) : (
-            <>
-              <div className="cart-items-list">
-                {cart.map((item) => (
-                  <div key={item.cartItemId} className={`cart-item ${removingItems.includes(item.cartItemId) ? 'cart-item-removing' : ''}`}>
-                    <div className="cart-item-img">
-                      {item.img && typeof item.img === 'string' && item.img.length > 5 ? (
-                        <img src={item.img} alt={item.name} />
-                      ) : (
-                        item.img
-                      )}
-                    </div>
-                    <div className="cart-item-info">
-                      <h4>
-                        {item.name}
-                        {item.selectedOption && (
-                          <span className="cart-item-option"><br />({item.selectedOption.name})</span>
-                        )}
-                      </h4>
-                      <div className="quantity-controls">
-                        <button className="qty-btn" onClick={() => removeFromCart(item.cartItemId)}>−</button>
-                        <span className="qty-text">{item.quantity} шт.</span>
-                        <button className="qty-btn" onClick={() => addToCart(item, item.selectedOption)}>+</button>
-                      </div>
-                    </div>
-                    <div className="cart-item-total">{item.price * item.quantity} ₽</div>
-                  </div>
-                ))}
-              </div>
-
-              <div className="promo-section">
-                <input
-                  type="text"
-                  placeholder="Промокод"
-                  value={promoInput}
-                  onChange={(e) => {
-                    setPromoInput(e.target.value);
-                    if (e.target.value.trim() === '') {
-                      setAppliedPromo(null);
-                      setDiscountPercent(0);
-                    }
-                  }}
-                />
-                <button onClick={handleApplyPromo}>Применить</button>
-              </div>
-
-              <div className="user-form">
-                <h3>Данные получателя</h3>
-                <input type="text" name="name" placeholder="ФИО" value={userData.name} onChange={handleInputChange} />
-                <input type="tel" name="phone" placeholder="Номер телефона" value={userData.phone} onChange={handleInputChange} />
-                <input type="text" name="city" placeholder="Город доставки" value={userData.city} onChange={handleInputChange} />
-                <textarea className="comment-input" placeholder="Комментарий к заказу" value={orderComment} onChange={(e) => setOrderComment(e.target.value)} />
-              </div>
-
-              <div className="cart-summary">
-                {appliedPromo && (
-                  <div className="summary-row discount">
-                    <span>Скидка ({appliedPromo}):</span>
-                    <span>- {discountAmount} ₽</span>
-                  </div>
-                )}
-                <h3>Итого: <span>{totalPrice} ₽</span></h3>
-                {!isMinOrderReached && (
-                  <div className="min-order-progress">
-                    <div className="min-order-progress-text">
-                      <span>До минимального заказа:</span>
-                      <span className="min-order-remain">{MIN_ORDER_AMOUNT - totalPrice} ₽</span>
-                    </div>
-                    <div className="min-order-progress-bar">
-                      <div
-                        className="min-order-progress-fill"
-                        style={{ width: `${Math.min((totalPrice / MIN_ORDER_AMOUNT) * 100, 100)}%` }}
-                      />
-                    </div>
-                  </div>
-                )}
-                <button
-                  className={`checkout-btn ${!isFormValid || isSubmitting ? 'disabled' : ''}`}
-                  onClick={handleCheckout}
-                  disabled={!isFormValid || isSubmitting}
-                >
-                  {isSubmitting ? "Отправка..." : (isFormValid ? "🚀 Подтвердить заказ" : "Заполните все поля")}
-                </button>
-                <p className="terms-text">
-                  Нажимая кнопку, вы соглашаетесь с <span onClick={() => openInfoLink(TERMS_LINK)}>условиями использования</span>
-                </p>
-                {orderHistory.length > 0 && (
-                  <button className="order-history-btn" onClick={() => setShowOrderHistory(true)}>
-                    📋 История заказов ({orderHistory.length})
-                  </button>
-                )}
-              </div>
-            </>
-          )}
-        </div>
+        <CartView
+          cart={cart}
+          setCart={setCart}
+          removingItems={removingItems}
+          addToCart={addToCart}
+          removeFromCart={removeFromCart}
+          promoInput={promoInput}
+          setPromoInput={setPromoInput}
+          appliedPromo={appliedPromo}
+          setAppliedPromo={setAppliedPromo}
+          discountPercent={discountPercent}
+          setDiscountPercent={setDiscountPercent}
+          handleApplyPromo={handleApplyPromo}
+          userData={userData}
+          handleInputChange={handleInputChange}
+          orderComment={orderComment}
+          setOrderComment={setOrderComment}
+          subtotalPrice={subtotalPrice}
+          discountAmount={discountAmount}
+          totalPrice={totalPrice}
+          isMinOrderReached={isMinOrderReached}
+          isFormValid={isFormValid}
+          isSubmitting={isSubmitting}
+          handleCheckout={handleCheckout}
+          openInfoLink={openInfoLink}
+          setIsCartOpen={setIsCartOpen}
+          showClearConfirm={showClearConfirm}
+          setShowClearConfirm={setShowClearConfirm}
+          orderHistory={orderHistory}
+          setShowOrderHistory={setShowOrderHistory}
+          MIN_ORDER_AMOUNT={MIN_ORDER_AMOUNT}
+          TERMS_LINK={TERMS_LINK}
+        />
       ) : (
         <>
           <div className="filters-container">
-            {/* Строка поиска */}
-            <div className="search-wrapper">
-              <input
-                type="search"
-                className="search-input"
-                placeholder="🔍 Поиск товара..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                autoComplete="off"
-                autoCorrect="off"
-                autoCapitalize="off"
-                spellCheck="false"
-              />
-              {searchQuery && (
-                <button className="search-clear-btn" onClick={() => setSearchQuery("")}>×</button>
-              )}
-            </div>
+            <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
 
-            {/* Фильтры категорий — скрываем при активном поиске */}
             {!searchQuery && (
-              <div className="filters-row">
-                <div className={`filters ${isCategoriesExpanded ? 'filters-expanded' : ''}`}>
-                  {categories.map(cat => (
-                    <button
-                      key={cat}
-                      className={`filter-btn ${activeCategory === cat ? 'active' : ''} ${cat === 'Индивидуально' ? 'filter-btn-individual' : ''} ${cat === '18+' ? 'filter-btn-18' : ''}`}
-                      onClick={() => handleCategoryClick(cat)}
-                    >
-                      {cat}
-                    </button>
-                  ))}
-                </div>
-                <button
-                  className="expand-categories-btn"
-                  onClick={() => setIsCategoriesExpanded(!isCategoriesExpanded)}
-                >
-                  {isCategoriesExpanded ? '↑' : '↓'}
-                </button>
-              </div>
+              <CategoryFilter
+                categories={categories}
+                activeCategory={activeCategory}
+                onCategoryClick={handleCategoryClick}
+                isExpanded={isCategoriesExpanded}
+                setIsExpanded={setIsCategoriesExpanded}
+              />
             )}
 
-            <div className="sort-wrapper">
-              <button
-                className="sort-btn"
-                onClick={() => {
-                  if (sortOrder === "default") setSortOrder("asc");
-                  else if (sortOrder === "asc") setSortOrder("desc");
-                  else setSortOrder("default");
-                }}
-              >
-                {sortOrder === "default" && "⇅ Сортировка"}
-                {sortOrder === "asc" && "▲ Сначала дешевые"}
-                {sortOrder === "desc" && "▼ Сначала дорогие"}
-              </button>
-            </div>
+            <SortButton sortOrder={sortOrder} setSortOrder={setSortOrder} />
           </div>
 
           {searchQuery && (
@@ -650,185 +414,23 @@ function App() {
             </p>
           )}
 
-          <div className="catalog">
-            {displayedProducts.length === 0 ? (
-              <>
-                <div className="empty-search">
-                  <div className="empty-search-icon">🔍</div>
-                  <p>Ничего не найдено</p>
-                  <span>Но вы можете заказать любой товар индивидуально!</span>
-                </div>
-                {(() => {
-                  const individualProduct = products.find(p => p.game === 'Индивидуально');
-                  return individualProduct ? (
-                    <div
-                      className="product-card individual-hint-card"
-                      onClick={() => openModal(individualProduct)}
-                      style={{ animationDelay: '0s', cursor: 'pointer' }}
-                    >
-                      <div className="clickable-area">
-                        <div className="product-image">
-                          {individualProduct.img && typeof individualProduct.img === 'string' && individualProduct.img.length > 5 ? (
-                            <img
-                              src={individualProduct.img}
-                              alt={individualProduct.name}
-                              loading="lazy"
-                              className="loading"
-                              onLoad={(e) => {
-                                e.target.classList.remove('loading');
-                                e.target.classList.add('loaded');
-                              }}
-                              onError={(e) => {
-                                e.target.classList.remove('loading');
-                                e.target.classList.add('img-error');
-                              }}
-                            />
-                          ) : (
-                            individualProduct.img
-                          )}
-                        </div>
-                        <div className="product-game">Индивидуально</div>
-                        <h3 className="product-name">{individualProduct.name}</h3>
-                      </div>
-                      <div className="card-bottom">
-                        <div className="card-bottom-row">
-                          <div className="product-price">{individualProduct.price} ₽</div>
-                          <button
-                            className="buy-btn-small"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              openModal(individualProduct);
-                            }}
-                          >
-                            +
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  ) : null;
-                })()}
-              </>
-            ) : (
-              displayedProducts.map((product) => (
-                <div
-                  key={product.id}
-                  className="product-card"
-                  style={{ animationDelay: `${displayedProducts.indexOf(product) * 0.08}s` }}
-                >
-                  <div className="clickable-area" onClick={() => openModal(product)}>
-                    <div className="product-image">
-                      {product.badge && <span className="product-badge">{product.badge}</span>}
-                      {product.img && typeof product.img === 'string' && product.img.length > 5 ? (
-                        <img
-                          src={product.img}
-                          alt={product.name}
-                          className="loading"
-                          loading="lazy"
-                          onLoad={(e) => {
-                            e.target.classList.remove('loading');
-                            e.target.classList.add('loaded');
-                          }}
-                          onError={(e) => {
-                            e.target.classList.remove('loading');
-                            e.target.classList.add('img-error');
-                          }}
-                        />
-                      ) : (
-                        product.img
-                      )}
-                    </div>
-
-                    <div className="product-game">
-                      {Array.isArray(product.game) ? product.game.join(', ') : product.game}
-                    </div>
-
-                    <h3 className="product-name">{product.name}</h3>
-                  </div>
-
-                  <div className="card-bottom">
-                    {(() => {
-                      const inCart = cart.filter(item => item.id === product.id);
-                      const totalQty = inCart.reduce((sum, item) => sum + item.quantity, 0);
-                      return totalQty > 0 ? (
-                        <div className="in-cart-badge">✓ {totalQty} в корзине</div>
-                      ) : null;
-                    })()}
-
-                    <div className="card-bottom-row">
-                      <div className="product-price">
-                        {product.options && product.options.length > 0
-                          ? `от ${Math.min(...product.options.map(o => o.price))} ₽`
-                          : `${product.price} ₽`}
-                      </div>
-                      <button
-                        className={`buy-btn-small ${product.isAvailable === false ? 'disabled-small' : ''}`}
-                        data-id={product.id}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          if (product.isAvailable !== false) {
-                            if (product.options && product.options.length > 0) {
-                              openModal(product);
-                            } else {
-                              const imgEl = e.target.closest('.product-card')?.querySelector('.product-image');
-                              addToCart(product, null, imgEl);
-                            }
-                          }
-                        }}
-                        disabled={product.isAvailable === false}
-                      >
-                        {product.isAvailable === false ? "🚫" : (product.options && product.options.length > 0 ? "☰" : "+")}
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              ))
-            )}
-          </div>
+          <Catalog
+            displayedProducts={displayedProducts}
+            cart={cart}
+            onOpenModal={openModal}
+            onAddToCart={addToCart}
+            searchQuery={searchQuery}
+          />
         </>
       )}
 
-      {showScrollTop && (
-        <button
-          className="scroll-top-btn"
-          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-        >
-          ↑
-        </button>
-      )}
+      <ScrollTopButton show={showScrollTop} />
 
-      {/* Модальное окно истории заказов */}
       {showOrderHistory && (
-        <div className="modal-overlay" onClick={() => setShowOrderHistory(false)}>
-          <div className="modal-content order-history-modal" onClick={(e) => e.stopPropagation()}>
-            <button className="close-modal" onClick={() => setShowOrderHistory(false)}>×</button>
-            <h2>📋 История заказов</h2>
-            
-            {orderHistory.length === 0 ? (
-              <div className="empty-history">
-                <div className="empty-history-icon">📦</div>
-                <p>У вас пока нет заказов</p>
-              </div>
-            ) : (
-              <ul className="order-history-list">
-                {orderHistory.map((order) => (
-                  <li key={order.id} className="order-history-item">
-                    <div className="order-header">
-                      <span className="order-date">{order.date}</span>
-                      <span className="order-total">{order.total} ₽</span>
-                    </div>
-                    <ul className="order-items">
-                      {order.items.map((item, itemIdx) => (
-                        <li key={itemIdx}>
-                          {item.optionName ? `${item.name} (${item.optionName})` : item.name} × {item.quantity}
-                        </li>
-                      ))}
-                    </ul>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
-        </div>
+        <OrderHistoryModal
+          orderHistory={orderHistory}
+          onClose={() => setShowOrderHistory(false)}
+        />
       )}
     </div>
   );
