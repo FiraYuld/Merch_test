@@ -1,5 +1,5 @@
 import Fuse from 'fuse.js';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import './App.css';
 import { products, categories } from './products';
 import { IMAGES } from './images';
@@ -42,6 +42,10 @@ function App() {
   const [isCategoriesExpanded, setIsCategoriesExpanded] = useState(false);
   const [showClearConfirm, setShowClearConfirm] = useState(false);
   const [removingItems, setRemovingItems] = useState([]);
+  const [showScrollTop, setShowScrollTop] = useState(false);
+  const [flyingItem, setFlyingItem] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const cartBtnRef = useRef(null);
 
   // 🆕 Эти эффекты автоматически сохраняют данные в память при любом их изменении
   useEffect(() => {
@@ -58,6 +62,14 @@ function App() {
     }
   }, []);
 
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowScrollTop(window.scrollY > 400);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   const showToast = (message) => {
     setToast(message);
     setTimeout(() => setToast(""), 2000);
@@ -68,7 +80,24 @@ function App() {
     setSelectedOptionIndex(0);
   };
 
-  const addToCart = (product, selectedOption = null) => {
+  const animateFlyToCart = (imgSrc, startElement) => {
+    if (!cartBtnRef.current || !startElement) return;
+    
+    const startRect = startElement.getBoundingClientRect();
+    const endRect = cartBtnRef.current.getBoundingClientRect();
+    
+    setFlyingItem({
+      img: imgSrc,
+      startX: startRect.left + startRect.width / 2,
+      startY: startRect.top + startRect.height / 2,
+      endX: endRect.left + endRect.width / 2,
+      endY: endRect.top + endRect.height / 2,
+    });
+    
+    setTimeout(() => setFlyingItem(null), 600);
+  };
+
+  const addToCart = (product, selectedOption = null, sourceElement = null) => {
     if (product.isAvailable === false) {
       showToast("❌ Товар временно недоступен");
       return;
@@ -76,9 +105,12 @@ function App() {
 
     const cartItemId = selectedOption ? `${product.id}-${selectedOption.name}` : String(product.id);
     const itemPrice = selectedOption ? selectedOption.price : product.price;
-
-    // Если у опции есть своя картинка, берем её. Если нет - берем базовую от товара
     const itemImg = (selectedOption && selectedOption.img) ? selectedOption.img : product.img;
+
+    // Анимация полёта
+    if (sourceElement && typeof itemImg === 'string') {
+      animateFlyToCart(itemImg, sourceElement);
+    }
 
     setCart((prevCart) => {
       const existingItem = prevCart.find(item => item.cartItemId === cartItemId);
@@ -87,19 +119,16 @@ function App() {
           item.cartItemId === cartItemId ? { ...item, quantity: item.quantity + 1 } : item
         );
       } else {
-        // Перезаписываем img для корзины на itemImg
         return [...prevCart, { ...product, cartItemId, price: itemPrice, img: itemImg, selectedOption, quantity: 1 }];
       }
     });
 
-    // Вибрация через Telegram
     if (window.Telegram?.WebApp?.HapticFeedback) {
       window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
     }
 
     showToast(`✅ Добавлено: ${product.name} ${selectedOption ? `(${selectedOption.name})` : ''}`);
 
-    // Пульсация кнопки
     const btn = document.querySelector(`[data-id="${product.id}"]`);
     if (btn) {
       btn.classList.remove('pulse');
@@ -129,7 +158,13 @@ function App() {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setUserData(prev => ({ ...prev, [name]: value }));
+    
+    if (name === 'phone') {
+      const digitsOnly = value.replace(/\D/g, '').slice(0, 20);
+      setUserData(prev => ({ ...prev, phone: digitsOnly }));
+    } else {
+      setUserData(prev => ({ ...prev, [name]: value }));
+    }
   };
 
   const handleApplyPromo = () => {
@@ -178,17 +213,15 @@ function App() {
     setShowAgeModal(false);
   };
 
-  const getSortedProducts = () => {
+  const displayedProducts = useMemo(() => {
     let filtered = products.filter(product => {
       const gameArray = Array.isArray(product.game) ? product.game : [product.game];
 
-      // Если идёт поиск — показываем всё (18+ только если верифицирован)
       if (searchQuery.trim().length > 0) {
         if (gameArray.includes("18+") && !isAgeVerified) return false;
         return true;
       }
 
-      // Обычная фильтрация по категории
       if (activeCategory === "Все") {
         return !gameArray.includes("18+");
       } else {
@@ -196,7 +229,6 @@ function App() {
       }
     });
 
-    // Потом применяем умный поиск если есть запрос
     if (searchQuery.trim().length > 0) {
       const fuse = new Fuse(filtered, {
         keys: ["name", "game", "desc"],
@@ -207,21 +239,16 @@ function App() {
       filtered = fuse.search(searchQuery.trim()).map(result => result.item);
     }
 
-    // Сортировка
     const sorted = [...filtered];
-
-    // Поднимаем "Индивидуально" всегда наверх
     const individual = sorted.filter(p => p.game === 'Индивидуально');
     const rest = sorted.filter(p => p.game !== 'Индивидуально');
 
-    // Сортировка применяется только к остальным товарам, Индивидуально всегда первый
     if (sortOrder === "asc") rest.sort((a, b) => a.price - b.price);
     if (sortOrder === "desc") rest.sort((a, b) => b.price - a.price);
 
     return [...individual, ...rest];
-  };
+  }, [searchQuery, activeCategory, sortOrder, isAgeVerified]);
 
-  const displayedProducts = getSortedProducts();
   const subtotalPrice = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
   const discountAmount = Math.floor(subtotalPrice * discountPercent);
   const totalPrice = subtotalPrice - discountAmount;
@@ -231,7 +258,9 @@ function App() {
   const isFormValid = userData.name.trim() && userData.phone.trim() && userData.city.trim() && cart.length > 0 && isMinOrderReached;
 
   const handleCheckout = () => {
-    // 🆕 Перед отправкой пробегаемся по корзине и приклеиваем опцию к имени
+    if (isSubmitting) return;
+    setIsSubmitting(true);
+
     const formattedCart = cart.map(item => ({
       ...item,
       name: item.selectedOption ? `${item.name} (${item.selectedOption.name})` : item.name
@@ -247,16 +276,15 @@ function App() {
       user: userData
     };
 
-    // 🆕 Очищаем корзину из памяти браузера, так как заказ успешно оформлен
     localStorage.removeItem('sheepCart');
 
     if (window.Telegram?.WebApp?.sendData) {
       window.Telegram.WebApp.sendData(JSON.stringify(orderData));
     } else {
       alert(`Заказ оформлен!\nИтог: ${totalPrice} ₽`);
-      // 🆕 Очищаем корзину локально для тестов в браузере
       setCart([]);
       setIsCartOpen(false);
+      setIsSubmitting(false);
     }
   };
 
@@ -269,12 +297,27 @@ function App() {
     <div className="app-container">
       <div className={`toast ${toast ? 'show' : ''}`}>{toast}</div>
 
+      {flyingItem && (
+        <div
+          className="flying-item"
+          style={{
+            '--start-x': `${flyingItem.startX}px`,
+            '--start-y': `${flyingItem.startY}px`,
+            '--end-x': `${flyingItem.endX}px`,
+            '--end-y': `${flyingItem.endY}px`,
+          }}
+        >
+          <img src={flyingItem.img} alt="" />
+        </div>
+      )}
+
       <header className="header">
         <div className="logo-container">
           <img src={IMAGES.logo} alt="Logo" className="app-logo" />
           <h1>Sheep To Me</h1>
         </div>
         <button
+          ref={cartBtnRef}
           className="cart-btn"
           onClick={() => {
             setIsCartOpen(!isCartOpen);
@@ -349,10 +392,11 @@ function App() {
 
               <button
                 className={`modal-buy-btn ${selectedProduct.isAvailable === false ? 'disabled-btn' : ''}`}
-                onClick={() => {
+                onClick={(e) => {
                   if (selectedProduct.isAvailable !== false) {
                     const opt = selectedProduct.options ? selectedProduct.options[selectedOptionIndex] : null;
-                    addToCart(selectedProduct, opt);
+                    const imgEl = e.target.closest('.modal-content')?.querySelector('.modal-img');
+                    addToCart(selectedProduct, opt, imgEl);
                     setSelectedProduct(null);
                   }
                 }}
@@ -409,7 +453,14 @@ function App() {
           <h2 style={{ margin: '0 0 16px 0' }}>Оформление заказа</h2>
 
           {cart.length === 0 ? (
-            <p className="empty-cart">В корзине пока пусто...</p>
+            <div className="empty-cart-container">
+              <div className="empty-cart-icon">🛒</div>
+              <h3 className="empty-cart-title">Корзина пуста</h3>
+              <p className="empty-cart-text">Добавьте товары, чтобы оформить заказ</p>
+              <button className="empty-cart-btn" onClick={() => setIsCartOpen(false)}>
+                Перейти к покупкам
+              </button>
+            </div>
           ) : (
             <>
               <div className="cart-items-list">
@@ -487,11 +538,11 @@ function App() {
                   </div>
                 )}
                 <button
-                  className={`checkout-btn ${!isFormValid ? 'disabled' : ''}`}
+                  className={`checkout-btn ${!isFormValid || isSubmitting ? 'disabled' : ''}`}
                   onClick={handleCheckout}
-                  disabled={!isFormValid}
+                  disabled={!isFormValid || isSubmitting}
                 >
-                  {isFormValid ? "🚀 Подтвердить заказ" : "Заполните все поля"}
+                  {isSubmitting ? "Отправка..." : (isFormValid ? "🚀 Подтвердить заказ" : "Заполните все поля")}
                 </button>
                 <p className="terms-text">
                   Нажимая кнопку, вы соглашаетесь с <span onClick={() => openInfoLink(TERMS_LINK)}>условиями использования</span>
@@ -594,6 +645,10 @@ function App() {
                                 e.target.classList.remove('loading');
                                 e.target.classList.add('loaded');
                               }}
+                              onError={(e) => {
+                                e.target.classList.remove('loading');
+                                e.target.classList.add('img-error');
+                              }}
                             />
                           ) : (
                             individualProduct.img
@@ -629,6 +684,7 @@ function App() {
                 >
                   <div className="clickable-area" onClick={() => openModal(product)}>
                     <div className="product-image">
+                      {product.badge && <span className="product-badge">{product.badge}</span>}
                       {product.img && typeof product.img === 'string' && product.img.length > 5 ? (
                         <img
                           src={product.img}
@@ -638,6 +694,10 @@ function App() {
                           onLoad={(e) => {
                             e.target.classList.remove('loading');
                             e.target.classList.add('loaded');
+                          }}
+                          onError={(e) => {
+                            e.target.classList.remove('loading');
+                            e.target.classList.add('img-error');
                           }}
                         />
                       ) : (
@@ -676,7 +736,8 @@ function App() {
                             if (product.options && product.options.length > 0) {
                               openModal(product);
                             } else {
-                              addToCart(product);
+                              const imgEl = e.target.closest('.product-card')?.querySelector('.product-image');
+                              addToCart(product, null, imgEl);
                             }
                           }
                         }}
@@ -691,6 +752,15 @@ function App() {
             )}
           </div>
         </>
+      )}
+
+      {showScrollTop && (
+        <button
+          className="scroll-top-btn"
+          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+        >
+          ↑
+        </button>
       )}
     </div>
   );

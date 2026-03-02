@@ -478,7 +478,7 @@ export const products = [
         options: [
             { name: "1 коробка (Версия 1)", price: 1600, img: IMAGES.labubu_mini1 }, 
             { name: "1 коробка (Версия 2)", price: 1600, img: IMAGES.labubu_mini2 }, 
-            { name: "Нужный цвет на выбор", price: 2100, img: IMAGES.labubu_mini }
+            { name: "Нужный цвет на выбор", price: 2100, img: IMAGES.labubu_mini1 }
         ]
     },
 
@@ -594,7 +594,8 @@ export const products = [
         name: "Сумка Arknights: Endfield",
         game: "Arknights",
         price: 3400, 
-        img: IMAGES.endfield_bag, // Не забудь добавить переменную в images.js
+        img: IMAGES.endfield_bag,
+        badge: "Новинка",
         desc: (
         <>
           Стильная и вместительная сумка по мотивам Arknights: Endfield.<br />
