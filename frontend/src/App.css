@@ -780,3 +780,87 @@ body {
   font-weight: 600;
   cursor: pointer;
 }
+
+/* --- История заказов --- */
+.order-history-btn {
+  margin-top: 16px;
+  background: transparent;
+  border: 1px solid #e1e1e8;
+  color: #5c5c66;
+  padding: 12px 20px;
+  border-radius: 10px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.order-history-btn:hover {
+  background: #f8f8fa;
+}
+
+.order-history-modal {
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.order-history-list {
+  list-style: none;
+  padding: 0;
+  margin: 16px 0 0;
+}
+
+.order-history-item {
+  background: #f8f8fa;
+  border-radius: 12px;
+  padding: 14px;
+  margin-bottom: 12px;
+}
+
+.order-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.order-date {
+  font-size: 13px;
+  color: #8e8e93;
+}
+
+.order-total {
+  font-weight: 700;
+  color: #D8548C;
+}
+
+.order-items {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  font-size: 13px;
+  color: #5c5c66;
+}
+
+.order-items li {
+  padding: 4px 0;
+  border-bottom: 1px solid #e8e8ed;
+}
+
+.order-items li:last-child {
+  border-bottom: none;
+}
+
+.empty-history {
+  text-align: center;
+  padding: 32px 16px;
+}
+
+.empty-history-icon {
+  font-size: 48px;
+  margin-bottom: 12px;
+}
+
+.empty-history p {
+  color: #8e8e93;
+  margin: 0;
+}

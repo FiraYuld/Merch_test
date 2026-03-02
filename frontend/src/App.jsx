@@ -47,6 +47,13 @@ function App() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const cartBtnRef = useRef(null);
 
+  // История заказов
+  const [orderHistory, setOrderHistory] = useState(() => {
+    const savedHistory = localStorage.getItem('sheepOrderHistory');
+    return savedHistory ? JSON.parse(savedHistory) : [];
+  });
+  const [showOrderHistory, setShowOrderHistory] = useState(false);
+
   // 🆕 Эти эффекты автоматически сохраняют данные в память при любом их изменении
   useEffect(() => {
     localStorage.setItem('sheepCart', JSON.stringify(cart));
@@ -55,6 +62,10 @@ function App() {
   useEffect(() => {
     localStorage.setItem('sheepUser', JSON.stringify(userData));
   }, [userData]);
+
+  useEffect(() => {
+    localStorage.setItem('sheepOrderHistory', JSON.stringify(orderHistory));
+  }, [orderHistory]);
 
   useEffect(() => {
     if (window.Telegram?.WebApp) {
@@ -276,6 +287,20 @@ function App() {
       user: userData
     };
 
+    // Сохраняем заказ в историю
+    const historyEntry = {
+      id: Date.now(),
+      date: new Date().toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' }),
+      items: cart.map(item => ({
+        name: item.name,
+        optionName: item.selectedOption?.name || null,
+        quantity: item.quantity,
+        price: item.price
+      })),
+      total: totalPrice
+    };
+    setOrderHistory(prev => [historyEntry, ...prev]);
+
     localStorage.removeItem('sheepCart');
 
     if (window.Telegram?.WebApp?.sendData) {
@@ -359,7 +384,6 @@ function App() {
             </div>
             <h2>{selectedProduct.name}</h2>
 
-            {/* 🆕 Поддержка мультикатегорий в модалке */}
             <div className="modal-game">
               {Array.isArray(selectedProduct.game) ? selectedProduct.game.join(', ') : selectedProduct.game}
             </div>
@@ -385,7 +409,6 @@ function App() {
                 </select>
               )}
 
-              {/* Кнопка "О товаре" рендерится всегда */}
               <button className="modal-info-btn" onClick={() => openInfoLink(selectedProduct.tgLink)}>
                 ℹ️ О товаре
               </button>
@@ -460,6 +483,11 @@ function App() {
               <button className="empty-cart-btn" onClick={() => setIsCartOpen(false)}>
                 Перейти к покупкам
               </button>
+              {orderHistory.length > 0 && (
+                <button className="order-history-btn" onClick={() => setShowOrderHistory(true)}>
+                  📋 История заказов ({orderHistory.length})
+                </button>
+              )}
             </div>
           ) : (
             <>
@@ -547,6 +575,11 @@ function App() {
                 <p className="terms-text">
                   Нажимая кнопку, вы соглашаетесь с <span onClick={() => openInfoLink(TERMS_LINK)}>условиями использования</span>
                 </p>
+                {orderHistory.length > 0 && (
+                  <button className="order-history-btn" onClick={() => setShowOrderHistory(true)}>
+                    📋 История заказов ({orderHistory.length})
+                  </button>
+                )}
               </div>
             </>
           )}
@@ -761,6 +794,41 @@ function App() {
         >
           ↑
         </button>
+      )}
+
+      {/* Модальное окно истории заказов */}
+      {showOrderHistory && (
+        <div className="modal-overlay" onClick={() => setShowOrderHistory(false)}>
+          <div className="modal-content order-history-modal" onClick={(e) => e.stopPropagation()}>
+            <button className="close-modal" onClick={() => setShowOrderHistory(false)}>×</button>
+            <h2>📋 История заказов</h2>
+            
+            {orderHistory.length === 0 ? (
+              <div className="empty-history">
+                <div className="empty-history-icon">📦</div>
+                <p>У вас пока нет заказов</p>
+              </div>
+            ) : (
+              <ul className="order-history-list">
+                {orderHistory.map((order) => (
+                  <li key={order.id} className="order-history-item">
+                    <div className="order-header">
+                      <span className="order-date">{order.date}</span>
+                      <span className="order-total">{order.total} ₽</span>
+                    </div>
+                    <ul className="order-items">
+                      {order.items.map((item, itemIdx) => (
+                        <li key={itemIdx}>
+                          {item.optionName ? `${item.name} (${item.optionName})` : item.name} × {item.quantity}
+                        </li>
+                      ))}
+                    </ul>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        </div>
       )}
     </div>
   );
