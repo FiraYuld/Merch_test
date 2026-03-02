@@ -149,6 +149,11 @@ function App() {
       window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
     }
 
+    // Яндекс.Метрика — цель "Добавление в корзину"
+    if (window.ym) {
+      window.ym(107070634, 'reachGoal', 'addToCart', { productId: product.id, productName: product.name, price: itemPrice });
+    }
+
     showToast(`✅ Добавлено: ${product.name} ${selectedOption ? `(${selectedOption.name})` : ''}`);
 
     const btn = document.querySelector(`[data-id="${product.id}"]`);
@@ -313,6 +318,11 @@ function App() {
     setOrderHistory(prev => [historyEntry, ...prev]);
 
     localStorage.removeItem('sheepCart');
+
+    // Яндекс.Метрика — цель "Оформление заказа"
+    if (window.ym) {
+      window.ym(107070634, 'reachGoal', 'checkout', { totalPrice: totalPrice, itemsCount: cart.length });
+    }
 
     if (window.Telegram?.WebApp?.sendData) {
       window.Telegram.WebApp.sendData(JSON.stringify(orderData));
