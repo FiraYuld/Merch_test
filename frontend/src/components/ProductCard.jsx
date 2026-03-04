@@ -7,6 +7,7 @@ function ProductCard({ product, index, cartQty, onOpenModal, onAddToCart }) {
       <div className="clickable-area" onClick={() => onOpenModal(product)}>
         <div className="product-image">
           {product.badge && <span className="product-badge">{product.badge}</span>}
+          {product.preorder && <span className="product-badge product-badge-preorder">Предзаказ</span>}
           {product.img && typeof product.img === 'string' && product.img.length > 5 ? (
             <img
               src={product.img}

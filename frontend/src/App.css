@@ -178,6 +178,17 @@ body {
   box-shadow: 0 2px 6px rgba(84, 130, 216, 0.4);
 }
 
+.product-badge-preorder {
+  left: auto;
+  right: 8px;
+  background: linear-gradient(135deg, #d4a02c, #e8b84a);
+  box-shadow: 0 2px 6px rgba(212, 160, 44, 0.4);
+}
+
+.product-badge + .product-badge-preorder {
+  top: 8px;
+}
+
 .product-game {
   font-size: 9px;
   color: #D8548C;
