@@ -598,7 +598,7 @@ export const products = [
         game: "Arknights",
         price: 3400, 
         img: IMAGES.endfield_bag,
-        badge: "Новинка", preorder: true,
+        badge: "Новинка",
         desc: (
         <>
           Стильная и вместительная сумка по мотивам Arknights: Endfield.<br />
