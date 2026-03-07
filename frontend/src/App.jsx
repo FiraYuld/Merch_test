@@ -267,6 +267,7 @@ function App() {
   // Computed values
   const displayedProducts = useMemo(() => {
     let filtered = productsForDisplay.filter(product => {
+      if (product.isAvailable === false) return false;
       const gameArray = Array.isArray(product.game) ? product.game : [product.game];
 
       if (searchQuery.trim().length > 0) {
@@ -283,9 +284,15 @@ function App() {
 
     if (searchQuery.trim().length > 0) {
       const fuse = new Fuse(filtered, {
-        keys: ["name", "game", "desc"],
+        keys: [
+          { name: "name", weight: 1 },
+          { name: "game", weight: 0.7 },
+          { name: "desc", weight: 0.5 },
+          { name: "options.name", weight: 1 },
+          { name: "options.desc", weight: 0.6 },
+        ],
         threshold: 0.35,
-        minMatchCharLength: 3,
+        minMatchCharLength: 2,
         ignoreLocation: true,
       });
       filtered = fuse.search(searchQuery.trim()).map(result => result.item);

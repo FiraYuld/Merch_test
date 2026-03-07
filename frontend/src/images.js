@@ -59,6 +59,20 @@ import zzz_stands_ye_shunguang_b from './assets/zzz_stands_ye_shunguang_b.webp';
 import zzz_stands_yixuan from './assets/zzz_stands_yixuan.webp';
 import zzz_stands_pan_yinhu from './assets/zzz_stands_pan_yinhu.webp';
 import zzz_stands_ju_fufu from './assets/zzz_stands_ju_fufu.webp';
+import hsr_perfume_general from './assets/hsr_perfume_general.webp';
+import hsr_perfume_imbibitor from './assets/hsr_perfume_imbibitor.webp';
+import hsr_perfume_aventurine from './assets/hsr_perfume_aventurine.webp';
+import hsr_perfume_kafka from './assets/hsr_perfume_kafka.webp';
+import hsr_perfume_sparkle from './assets/hsr_perfume_sparkle.webp';
+import hsr_perfume_anaxa from './assets/hsr_perfume_anaxa.webp';
+import hsr_perfume_aglaia from './assets/hsr_perfume_aglaia.webp';
+import hsr_perfume_jing_yuan from './assets/hsr_perfume_jing_yuan.webp';
+import hsr_perfume_jingliu from './assets/hsr_perfume_jingliu.webp';
+import hsr_perfume_blade from './assets/hsr_perfume_blade.webp';
+import hsr_perfume_argenti from './assets/hsr_perfume_argenti.webp';
+import hsr_perfume_faenon from './assets/hsr_perfume_faenon.webp';
+import hsr_perfume_firefly from './assets/hsr_perfume_firefly.webp';
+import hsr_perfume_castoria from './assets/hsr_perfume_castoria.webp';
 
 export const IMAGES = {
     logo: logo,
@@ -113,6 +127,20 @@ export const IMAGES = {
     zzz_stands_yixuan: zzz_stands_yixuan,
     zzz_stands_pan_yinhu: zzz_stands_pan_yinhu,
     zzz_stands_ju_fufu: zzz_stands_ju_fufu,
+    hsr_perfume_general: hsr_perfume_general,
+    hsr_perfume_imbibitor: hsr_perfume_imbibitor,
+    hsr_perfume_aventurine: hsr_perfume_aventurine,
+    hsr_perfume_kafka: hsr_perfume_kafka,
+    hsr_perfume_sparkle: hsr_perfume_sparkle,
+    hsr_perfume_anaxa: hsr_perfume_anaxa,
+    hsr_perfume_aglaia: hsr_perfume_aglaia,
+    hsr_perfume_jing_yuan: hsr_perfume_jing_yuan,
+    hsr_perfume_jingliu: hsr_perfume_jingliu,
+    hsr_perfume_blade: hsr_perfume_blade,
+    hsr_perfume_argenti: hsr_perfume_argenti,
+    hsr_perfume_faenon: hsr_perfume_faenon,
+    hsr_perfume_firefly: hsr_perfume_firefly,
+    hsr_perfume_castoria: hsr_perfume_castoria,
     gift_box: gift_box,
     shopper_set: shopper_set,
     endfield_bag: endfield_bag,

@@ -28,6 +28,9 @@ function ProductModal({
           </div>
 
           <p className="modal-desc">{product.desc}</p>
+          {product.options?.[selectedOptionIndex]?.desc && (
+            <p className="modal-desc modal-option-desc">{product.options[selectedOptionIndex].desc}</p>
+          )}
 
           <div className="modal-price">
             {product.options && product.options.length > 0
