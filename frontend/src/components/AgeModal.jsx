@@ -7,7 +7,7 @@ function AgeModal({ onConfirm, onDeny }) {
         <p>Этот раздел содержит товары для взрослых. Пожалуйста, подтвердите ваш возраст.</p>
         <div className="modal-buttons-row">
           <button className="modal-info-btn deny-btn" onClick={onDeny}>Нет</button>
-          <button className="modal-buy-btn confirm-btn" onClick={onConfirm}>Да, мне 18+</button>
+          <button className="modal-buy-btn confirm-btn" onClick={onConfirm} data-testid="age-confirm">Да, мне 18+</button>
         </div>
       </div>
     </div>

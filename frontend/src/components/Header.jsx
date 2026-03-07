@@ -10,6 +10,7 @@ function Header({ totalItems, isCartOpen, setIsCartOpen, cartBtnRef }) {
       <button
         ref={cartBtnRef}
         className="cart-btn"
+        data-testid="cart-btn"
         onClick={() => {
           setIsCartOpen(!isCartOpen);
           window.scrollTo({ top: 0, behavior: 'smooth' });

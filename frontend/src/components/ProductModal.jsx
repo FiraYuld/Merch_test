@@ -53,6 +53,7 @@ function ProductModal({
 
           <button
             className={`modal-buy-btn ${product.isAvailable === false ? 'disabled-btn' : ''}`}
+            data-testid="add-to-cart-modal"
             onClick={(e) => {
               if (product.isAvailable !== false) {
                 const opt = product.options ? product.options[selectedOptionIndex] : null;

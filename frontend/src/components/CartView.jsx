@@ -34,7 +34,7 @@ function CartView({
   return (
     <div className="cart-view">
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-        <button className="back-to-catalog-btn" onClick={() => setIsCartOpen(false)}>
+        <button className="back-to-catalog-btn" onClick={() => setIsCartOpen(false)} data-testid="back-to-catalog">
           ← Каталог
         </button>
         {cart.length > 0 && (
@@ -117,11 +117,12 @@ function CartView({
             ))}
           </div>
 
-          <div className="promo-section">
+          <div className="promo-section" data-testid="promo-section">
             <input
               type="text"
               placeholder="Промокод"
               value={promoInput}
+              data-testid="promo-input"
               onChange={(e) => {
                 setPromoInput(e.target.value);
                 if (e.target.value.trim() === '') {
@@ -130,7 +131,7 @@ function CartView({
                 }
               }}
             />
-            <button onClick={handleApplyPromo}>Применить</button>
+            <button onClick={handleApplyPromo} data-testid="promo-apply">Применить</button>
           </div>
 
           <div className="user-form">
