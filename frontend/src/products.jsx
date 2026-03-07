@@ -36,26 +36,25 @@ export const products = [
   
     {
         id: 8,
-        name: "Фигурка Дань Хэн: Имбибитор 1/7  ",
+        name: "Статуэтка Дань Хэн: Имбибитор 1/7",
         game: "Honkai: Star Rail",
-        price: 16500, 
+        price: 23700, 
         img: IMAGES.dh_enchanced, // Базовая картинка
         desc: "Стандартная версия: приблизительно 22 см в длину, 21 см в ширину и 33 см в высоту. Расширенная версия: приблизительно 22 см в длину, 28 см в ширину и 38 см в высоту ",
         tgLink: "https://t.me/telegram/206",
         isAvailable: true,
         options: [
-            { name: "Стандартная версия", price: 16500, img: IMAGES.dh_base }, 
-            { name: "Расширенная версия", price: 21500, img: IMAGES.dh_enchanced }  
+            { name: "Стандартная версия", price: 23700, img: IMAGES.dh_base }, // 988 юаней
+            { name: "Расширенная версия", price: 30300, img: IMAGES.dh_enchanced }  // 1388 юаней
         ]
     },
 
     {
         id: 9,
-        name: "Фигурка Март 7 1/7  ",
+        name: "Статуэтка Март 7 1/7",
         game: "Honkai: Star Rail",
-        price: 16500, 
-        img: IMAGES.m7_base, // Базовая картинка
-        // Оборачиваем описание в круглые скобки и пустые теги <> ... </>
+        price: 23700, 
+        img: IMAGES.m7_base, 
         desc: (
         <>
           Оригинальная детализированная фигурка Март 7.<br />
@@ -69,17 +68,17 @@ export const products = [
         tgLink: "https://t.me/telegram/206",
         isAvailable: true,
         options: [
-            { name: "Без подставки", price: 16500, img: IMAGES.m7_base }, 
-            { name: "С подставкой", price: 20500, img: IMAGES.m7_enchanced }, 
-            { name: "C подставкой и подстветкой", price: 25500, img: IMAGES.m7_enchanced }  
+            { name: "Без подставки", price: 23700, img: IMAGES.m7_base }, // 988 юаней
+            { name: "С подставкой", price: 28500, img: IMAGES.m7_enchanced },  // 1287 юаней
+            { name: "C подставкой и подстветкой", price: 32800, img: IMAGES.m7_enchanced }  // 1547 юаней
         ]
     },
 
     {
         id: 10,
-        name: "Фигурка Фу Сюань 1/7  ",
+        name: "Статуэтка Фу Сюань 1/7",
         game: "Honkai: Star Rail",
-        price: 14500, 
+        price: 22100, // 888 юаней
         img: IMAGES.fuxuan, 
         desc: "Приблизительные размеры: высота 24 см, ширина 25 см и длина 21 см",
         tgLink: "https://t.me/telegram/202",
@@ -91,9 +90,8 @@ export const products = [
         id: 11,
         name: "Контроллер Кастории",
         game: ["Honkai: Star Rail", "Другое"],
-        price: 12500, 
-        img: IMAGES.cas_enchanced, // Базовая картинка
-        // Оборачиваем описание в круглые скобки и пустые теги <> ... </>
+        price: 15600, 
+        img: IMAGES.cas_enchanced, 
         desc: (
         <>
           Номинальное входное напряжение: 5V - 1000mA. <br />
@@ -109,8 +107,8 @@ export const products = [
         tgLink: "https://t.me/telegram/206",
         isAvailable: true,
         options: [
-            { name: "Контроллер, чехол + пин", price: 12500, img: IMAGES.cas_base }, 
-            { name: "Контроллер, чехол, зарядка + пин", price: 14500, img: IMAGES.cas_enchanced }, 
+            { name: "Контроллер, чехол + пин", price: 15600, img: IMAGES.cas_base }, // 799 юаней
+            { name: "Контроллер, чехол, зарядка + пин", price: 17200, img: IMAGES.cas_enchanced }, // 899 юаней
         ]
     },
 
@@ -118,9 +116,8 @@ export const products = [
         id: 12,
         name: "Контроллер Светлячка",
         game: ["Honkai: Star Rail", "Другое"],
-        price: 12500, 
-        img: IMAGES.sam_enchanced, // Базовая картинка
-        // Оборачиваем описание в круглые скобки и пустые теги <> ... </>
+        price: 15100, 
+        img: IMAGES.sam_enchanced, 
         desc: (
         <>
           Номинальное входное напряжение: 5V – 1000 мА<br />
@@ -135,8 +132,8 @@ export const products = [
         tgLink: "https://t.me/telegram/206",
         isAvailable: true,
         options: [
-            { name: "Контроллер, чехол + пин", price: 12500, img: IMAGES.sam_base }, 
-            { name: "Контроллер, чехол, зарядка + пин", price: 14500, img: IMAGES.sam_enchanced }, 
+            { name: "Контроллер, чехол + пин", price: 15100, img: IMAGES.sam_base }, // 769 юаней
+            { name: "Контроллер, чехол, зарядка + пин", price: 16800, img: IMAGES.sam_enchanced }, // 869 юаней
         ]
     },
 
@@ -144,9 +141,8 @@ export const products = [
         id: 13,
         name: "Клавиатура Кафки",
         game: ["Honkai: Star Rail", "Другое"],
-        price: 12500, 
-        img: IMAGES.kafka_kb_base, // Базовая картинка
-        // Оборачиваем описание в круглые скобки и пустые теги <> ... </>
+        price: 15200, 
+        img: IMAGES.kafka_kb_base,
         desc: (
         <>
           <b>Размер 87 клавиш:</b> 363.80x136.60x43.66mm <br />
@@ -160,8 +156,8 @@ export const products = [
         tgLink: "https://t.me/telegram/206",
         isAvailable: true,
         options: [
-            { name: "87 Клавиш", price: 12500, img: IMAGES.kafka_kb_base }, 
-            { name: "108 Клавиш", price: 13500, img: IMAGES.kafka_kb_enchanced}, 
+            { name: "87 Клавиш", price: 15200, img: IMAGES.kafka_kb_base }, // 748 юаней
+            { name: "108 Клавиш", price: 16200, img: IMAGES.kafka_kb_enchanced}, // 808 юаней
         ]
     },
 
@@ -169,9 +165,8 @@ export const products = [
         id: 14,
         name: "Клавиатура Ахерон",
         game: ["Honkai: Star Rail", "Другое"],
-        price: 12500, 
-        img: IMAGES.acheron_kb_base, // Базовая картинка
-        // Оборачиваем описание в круглые скобки и пустые теги <> ... </>
+        price: 15500, 
+        img: IMAGES.acheron_kb_base, 
         desc: (
         <>
           <b>Размер 87 клавиш:</b> 363.80x136.60x43.66mm <br />
@@ -185,8 +180,8 @@ export const products = [
         tgLink: "https://t.me/telegram/206",
         isAvailable: true,
         options: [
-            { name: "87 Клавиш", price: 12500, img: IMAGES.acheron_kb_base }, 
-            { name: "108 Клавиш", price: 13500, img: IMAGES.acheron_kb_enchanced}, 
+            { name: "87 Клавиш", price: 15500, img: IMAGES.acheron_kb_base }, // 768 юаней
+            { name: "108 Клавиш", price: 16500, img: IMAGES.acheron_kb_enchanced}, // 828 юаней
         ]
     },
 
@@ -194,7 +189,7 @@ export const products = [
         id: 15,
         name: "Клавиатура Бутхилла",
         game: ["Honkai: Star Rail", "Другое"],
-        price: 9000, 
+        price: 11000, // 499 юаней
         img: IMAGES.boothill_kb, 
         desc: (
         <>
@@ -214,7 +209,7 @@ export const products = [
         id: 16,
         name: "Сумка Ахерон",
         game: ["Honkai: Star Rail", "Другое"],
-        price: 6500, 
+        price: 6600, // 299 юаней
         img: IMAGES.acheron_bag, 
         desc: (
         <>
@@ -231,7 +226,7 @@ export const products = [
         id: 17,
         name: "Портфель Авантюрина",
         game: ["Honkai: Star Rail", "Другое"],
-        price: 6500, 
+        price: 6600, // 299 юаней
         img: IMAGES.aventurine_bag, 
         desc: (
         <>
@@ -248,7 +243,7 @@ export const products = [
         id: 18,
         name: "Сумка Фэйсяо",
         game: ["Honkai: Star Rail", "Другое"],
-        price: 6500, 
+        price: 6600, // 299 юаней
         img: IMAGES.feixiao_bag, 
         desc: (
         <>
@@ -265,7 +260,7 @@ export const products = [
         id: 19,
         name: "Портфель Кафки",
         game: ["Honkai: Star Rail", "Другое"],
-        price: 6500, 
+        price: 6600, // 299 юаней
         img: IMAGES.kafka_bag, 
         desc: (
         <>
@@ -281,7 +276,7 @@ export const products = [
         id: 20,
         name: "Рандом-бокс Химеры",
         game: ["Honkai: Star Rail"],
-        price: 1500, 
+        price: 1900, 
         img: IMAGES.chimers_random, 
         desc: (
         <>
@@ -292,8 +287,8 @@ export const products = [
         tgLink: "https://t.me/telegram/206",
         isAvailable: true,
         options: [
-            { name: "1 пакетик", price: 1500, img: IMAGES.chimers_random }, 
-            { name: "Полный коплект", price: 14500, img: IMAGES.chimers_random}, 
+            { name: "1 пакетик", price: 1900, img: IMAGES.chimers_random }, // 69 юаней
+            { name: "Полный коплект", price: 20600, img: IMAGES.chimers_random}, // 828 юаней
         ]
     },
 
@@ -301,7 +296,7 @@ export const products = [
         id: 21,
         name: "Плюшевые куклы",
         game: ["Honkai: Star Rail"],
-        price: 6500, 
+        price: 6400, // 288 юаней
         img: IMAGES.plush_1, 
         desc: (
         <>
@@ -312,10 +307,10 @@ export const products = [
         tgLink: "https://t.me/telegram/206",
         isAvailable: true,
         options: [
-            { name: "Кафка", price: 6500, img: IMAGES.plush_1}, 
-            { name: "Блэйд", price: 6500, img: IMAGES.plush_1},
-            { name: "Цзинлю", price: 6500, img: IMAGES.plush_1}, 
-            { name: "Цзинь Юань", price: 6500, img: IMAGES.plush_1}, 
+            { name: "Кафка", price: 6400, img: IMAGES.plush_1}, 
+            { name: "Блэйд", price: 6400, img: IMAGES.plush_1},
+            { name: "Цзинлю", price: 6400, img: IMAGES.plush_1}, 
+            { name: "Цзинь Юань", price: 6400, img: IMAGES.plush_1}, 
         ]
     },
 
@@ -323,7 +318,7 @@ export const products = [
         id: 22,
         name: "Рандом-бокс Банбу от PopMart",
         game: ["Zenless Zone Zero", "PopMart"],
-        price: 1500, 
+        price: 1900, 
         img: IMAGES.banboo_popmart, 
         desc: (
         <>
@@ -334,8 +329,8 @@ export const products = [
         tgLink: "https://t.me/telegram/206",
         isAvailable: true,
         options: [
-            { name: "1 бокс", price: 1500, img: IMAGES.banboo_popmart }, 
-            { name: "Полный комплект", price: 14500, img: IMAGES.banboo_popmart}, 
+            { name: "1 бокс", price: 1900, img: IMAGES.banboo_popmart }, // 69 юаней
+            { name: "Полный комплект", price: 20600, img: IMAGES.banboo_popmart}, // 828 юаней
         ]
     },
 
@@ -343,8 +338,8 @@ export const products = [
         id: 23,
         name: "Рандом-бокс Genshin Impact от PopMart",
         game: ["Genshin Impact", "PopMart"],
-        price: 2400, // Цена отображаемая в каталоге (за 1 бокс)
-        img: IMAGES.genshin_popmart, // Не забудь добавить переменную в images.js
+        price: 2500, 
+        img: IMAGES.genshin_popmart, 
         desc: (
         <>
           Внутри 1 случайная фигурка серии: Айно, Дурин, Варка, Флинс, Колумбина, Инеффа или редкий секретный дроп — Рери. <br />
@@ -357,16 +352,60 @@ export const products = [
         tgLink: "https://t.me/telegram/207", 
         isAvailable: true,
         options: [
-            { name: "1 бокс", price: 2400, img: IMAGES.genshin_popmart }, 
-            { name: "Набор (6 стилей)", price: 9000, img: IMAGES.genshin_popmart } 
+            { name: "1 бокс", price: 2500, img: IMAGES.genshin_popmart }, // 106 юаней
+            { name: "Набор (6 стилей)", price: 12100, img: IMAGES.genshin_popmart } // 470 юаней
         ]
+    },
+
+    {
+        id: 76,
+        name: "Акриловые стенды Zenless Zone Zero",
+        game: "Zenless Zone Zero",
+        price: 1400,
+        img: IMAGES.zzz_stands_general,
+        desc: (
+        <>
+          Серия «Иллюстрации», акриловые стенды-подставки с персонажами Zenless Zone Zero. Двухслойная офсетная печать. Упаковка: карточка-оборот + OPP-пакет.<br />
+          <br />
+          <b>Материал:</b> акрил.<br />
+          После получения снимите защитную плёнку с поверхности. Избегайте трения о твёрдые и острые предметы, прямых солнечных лучей и высокой влажности. При загрязнении протрите влажной тканью. Не игрушка — храните в недоступном для детей месте.
+        </>
+        ),
+        tgLink: "https://t.me/sheep2me_mg",
+        isAvailable: true,
+        options: [
+            { name: "Е Шуньгуан (вариант A)", price: 1400, img: IMAGES.zzz_stands_ye_shunguang_a },
+            { name: "Е Шуньгуан (вариант B)", price: 1400, img: IMAGES.zzz_stands_ye_shunguang_b },
+            { name: "Исюань", price: 1400, img: IMAGES.zzz_stands_yixuan },
+            { name: "Цзюй Фуфу", price: 1400, img: IMAGES.zzz_stands_pan_yinhu },
+            { name: "Пань Иньху", price: 1400, img: IMAGES.zzz_stands_ju_fufu }
+        ]
+    },
+
+    {
+        id: 74,
+        name: "Нендроид Чжун Ли",
+        game: "Genshin Impact",
+        price: 7300, // 349 юаней
+        img: IMAGES.zhongli_nendroid,
+        desc: (
+        <>
+          Серия «Гавань Лиюэ», Genshin Impact. Артикулированная фигурка, готовая окраска.<br />
+          <br />
+          <b>Материал:</b> ABS и PVC.<br />
+          <b>Размер:</b> высота ок. 100 мм (ок. 10 см).<br />
+          В комплекте эксклюзивная подставка. Производитель: Good Smile Company.
+        </>
+        ),
+        tgLink: "https://t.me/sheep2me_mg",
+        isAvailable: true
     },
 
     {
         id: 24,
         name: "Нендроид Зарянка",
         game: "Honkai: Star Rail",
-        price: 6500, 
+        price: 7300, // 349 юаней
         img: IMAGES.robin_nendroid, 
         desc: (
         <>
@@ -375,14 +414,14 @@ export const products = [
           <b>Есть сменные лица с разными эмоциями.</b>
         </>
         ),        
-        tgLink: "https://t.me/telegram/208", // Замени на актуальную ссылку
+        tgLink: "https://t.me/telegram/208", 
         isAvailable: true
     },
     {
         id: 25,
         name: "Нендроид Воскресенье",
         game: "Honkai: Star Rail",
-        price: 6500, 
+        price: 7300, // 349 юаней
         img: IMAGES.sunday_nendroid, 
         desc: (
         <>
@@ -398,7 +437,7 @@ export const products = [
         id: 26,
         name: "Нендроид Авантюрин",
         game: "Honkai: Star Rail",
-        price: 6500, 
+        price: 7300, // 349 юаней
         img: IMAGES.aventurine_nendroid, 
         desc: (
         <>
@@ -414,7 +453,7 @@ export const products = [
         id: 27,
         name: "Нендроид Дань Хэн",
         game: "Honkai: Star Rail",
-        price: 6300, 
+        price: 6900, // 325 юаней
         img: IMAGES.danheng_nendroid, 
         desc: (
         <>
@@ -430,7 +469,7 @@ export const products = [
         id: 28,
         name: "Нендроид Блэйд",
         game: "Honkai: Star Rail",
-        price: 6300, 
+        price: 6900, // 325 юаней
         img: IMAGES.blade_nendroid, 
         desc: (
         <>
@@ -446,7 +485,7 @@ export const products = [
         id: 29,
         name: "Нендроид Март 7", // У тебя было написано "Март 8", я исправил на классическое "Март 7" (или верни Март 8, если это специфика фигурки!)
         game: "Honkai: Star Rail",
-        price: 6300, 
+        price: 6900, // 325 юаней
         img: IMAGES.march_nendroid, 
         desc: (
         <>
@@ -463,8 +502,8 @@ export const products = [
         id: 30,
         name: "Брелок Мини Лабубу 10см",
         game: ["PopMart"],
-        price: 1600, 
-        img: IMAGES.labubu_mini1, // Не забудь добавить переменную в images.js
+        price: 1900, 
+        img: IMAGES.labubu_mini1, 
         desc: (
         <>
           Мини-брелок Лабубу в виде случайного бокса.<br />
@@ -476,12 +515,12 @@ export const products = [
           <i>*Если вы не хотите полагаться на случайность, выберите опцию «Нужный цвет на выбор» и укажите цвет в комментариях к заказу.</i>
         </>
         ),        
-        tgLink: "https://t.me/telegram/214", // Замени на актуальную ссылку
+        tgLink: "https://t.me/telegram/214", 
         isAvailable: true,
         options: [
-            { name: "1 коробка (Версия 1)", price: 1600, img: IMAGES.labubu_mini1 }, 
-            { name: "1 коробка (Версия 2)", price: 1600, img: IMAGES.labubu_mini2 }, 
-            { name: "Нужный цвет на выбор", price: 2100, img: IMAGES.labubu_mini1 }
+            { name: "1 коробка (Версия 1)", price: 1900, img: IMAGES.labubu_mini1 }, // 69 юаней
+            { name: "1 коробка (Версия 2)", price: 1900, img: IMAGES.labubu_mini2 }, // 69 юаней
+            { name: "Нужный цвет на выбор", price: 2400, img: IMAGES.labubu_mini1 } // 100 юаней
         ]
     },
 
@@ -490,7 +529,7 @@ export const products = [
         name: "Футболки Arknights: Endfield (3 опции)",
         game: "Arknights",
         price: 2800, 
-        img: IMAGES.endfield_tshirt1, // Добавь в images.js
+        img: IMAGES.endfield_tshirt1, 
         desc: (
         <>
           Стильная футболка по мотивам Arknights: Endfield.<br />
@@ -502,7 +541,7 @@ export const products = [
         </>
         ),        
         tgLink: "https://t.me/telegram/215",
-        isAvailable: true,
+        isAvailable: false,
         options: [
             { name: "Футболка Зиплайн", price: 2800, img: IMAGES.endfield_tshirt1 },
             { name: "Футболка Очки", price: 2800, img: IMAGES.endfield_tshirt2 },
@@ -525,7 +564,7 @@ export const products = [
         </>
         ),        
         tgLink: "https://t.me/telegram/216",
-        isAvailable: true,
+        isAvailable: false,
         options: [
             { name: "Зайчик Лэватейн", price: 1300, img: IMAGES.bunnies_plush1 },
             { name: "Зайчик Ивонна", price: 1300, img: IMAGES.bunnies_plush2 }
@@ -533,10 +572,10 @@ export const products = [
     },
     {
         id: 33,
-        name: "Стенд Ивонны (Гачапон-автомат)",
+        name: "Статуэтка Ивонны (Гачапон-автомат)",
         game: "Arknights",
         price: 1700, 
-        img: IMAGES.yvonne_stand, // Добавь в images.js
+        img: IMAGES.yvonne_stand, 
         desc: (
         <>
           Интерактивный акриловый стенд с Ивонной в виде автомата с игрушками.<br />
@@ -548,7 +587,7 @@ export const products = [
         </>
         ),        
         tgLink: "https://t.me/telegram/217",
-        isAvailable: true
+        isAvailable: false
     },
 
     {
@@ -569,7 +608,7 @@ export const products = [
         </>
         ),        
         tgLink: "https://t.me/telegram/218", // Замени на актуальную ссылку
-        isAvailable: true
+        isAvailable: false
     },
     {
         id: 35,
@@ -589,7 +628,7 @@ export const products = [
         </>
         ),        
         tgLink: "https://t.me/telegram/219", // Замени на актуальную ссылку
-        isAvailable: true
+        isAvailable: false
     },
 
     {
@@ -610,18 +649,107 @@ export const products = [
         </>
         ),        
         tgLink: "https://t.me/telegram/220", // Замени на актуальную ссылку
-        isAvailable: true
+        isAvailable: false
     },
     
-    // --- ТОВАРЫ 18+ ---
+    // --- ТОВАРЫ 18+ (пока пусто) ---
     {
-        id: 69,
-        name: "Фигурка Super Succubus",
-        game: "18+", 
-        price: 8500,
-        img: "🔞", 
-        desc: "Коллекционная фигурка с опциональными деталями. Строго 18+.",
-        tgLink: "https://t.me/telegram/6969",
+        id: 70,
+        name: "Статуэтка Кафка 1/8",
+        game: "Honkai: Star Rail",
+        price: 9400,
+        img: IMAGES.kafka_stand,
+        desc: (
+        <>
+          Фигурка Кафки 1/8, серия Gift+, Honkai: Star Rail LIVE ver. (со скрипкой).<br />
+          <br />
+          <b>Размеры:</b> высота ок. 22,5 см, ширина ок. 16 см, глубина ок. 13 см.<br />
+          <b>Материал:</b> PVC и ABS, готовая окрашенная фигурка.<br />
+          <b>Масштаб:</b> 1/8.<br />
+          В комплекте эксклюзивная подставка. Производитель: Myethos.
+        </>
+        ),
+        tgLink: "https://t.me/sheep2me_mg",
+        isAvailable: true
+    },
+    {
+        id: 71,
+        name: "Подставка для стендов Кафки",
+        game: "Honkai: Star Rail",
+        price: 12400,
+        img: IMAGES.kafka_display_no_light,
+        desc: (
+        <>
+          <b>Внимание:</b> в комплекте только витрина (подставка/дисплей-бокс). Фигурка приобретается отдельно.<br />
+          <br />
+          Витрина для фигурки Кафки 1/7, Honkai: Star Rail. Две версии: базовая (без подсветки) и улучшенная (с LED-подсветкой). Внутренний фон — театральная сцена с лестницей и аркой в стилистике игры.<br />
+          <br />
+          <b>Базовая:</b> акрил. Внутренние размеры после сборки ок. 260×260×338 мм, внешние ок. 270×270×363 мм. В комплекте: напильник, хлопковые перчатки для сборки, клейкие ленты 3 мм.<br />
+          <br />
+          <b>Улучшенная:</b> акрил + LED (2 лампы сверху, 1 сзади, 3 снизу; магнитная панель сзади для световой панели; подсветка снизу — отдельный выключатель). Внешние размеры ок. 270×285×388 мм. В комплекте дополнительно: адаптер питания, разветвитель питания.
+        </>
+        ),
+        tgLink: "https://t.me/sheep2me_mg",
+        isAvailable: true,
+        options: [
+            { name: "Базовая (без подсветки)", price: 12400, img: IMAGES.kafka_display_no_light },
+            { name: "Улучшенная (с подсветкой)", price: 14800, img: IMAGES.kafka_display_light }
+        ]
+    },
+    {
+        id: 72,
+        name: "Статуэтка Кафка 1/7",
+        game: "Honkai: Star Rail",
+        price: 21200,
+        img: IMAGES.kafka_1_7,
+        desc: (
+        <>
+          Фигурка Кафки 1/7 из Honkai: Star Rail в динамичной позе с катаной на тематической подставке.<br />
+          <br />
+          <b>Материал:</b> PVC и ABS, готовая окрашенная фигурка.<br />
+          <b>Масштаб:</b> 1/7 (нестандартная пропорция).<br />
+          <b>Размеры:</b> длина ок. 22 см, ширина ок. 24,5 см, высота ок. 26,5 см.<br />
+          В комплекте эксклюзивная подставка.
+        </>
+        ),
+        tgLink: "https://t.me/sheep2me_mg",
+        isAvailable: true
+    },
+    {
+        id: 73,
+        name: "Статуэтка Кэцин 1/8",
+        game: "Genshin Impact",
+        price: 9400,
+        img: IMAGES.keqing_figure,
+        desc: (
+        <>
+          Кэцин, версия «Блестящий гала», масштаб 1/8, Genshin Impact.<br />
+          <br />
+          <b>Размер:</b> высота ок. 21,5 см.<br />
+          <b>Материал:</b> PVC, ABS, металл.<br />
+          <b>Масштаб:</b> 1/8.<br />
+          Производитель: Myethos.
+        </>
+        ),
+        tgLink: "https://t.me/sheep2me_mg",
+        isAvailable: true
+    },
+    {
+        id: 75,
+        name: "Статуэтка Райден",
+        game: "Genshin Impact",
+        price: 5000, // 229 юаней
+        img: IMAGES.raiden_genshin,
+        desc: (
+        <>
+          Сёгун Райден (Всевластная громовержица), Genshin Impact. Сидящая фигурка в медитативной позе с катаной.<br />
+          <br />
+          <b>Размеры:</b> ок. 10,5 × 7,5 × 11 см.<br />
+          <b>Материал:</b> PVC и ABS.<br />
+          В комплекте: подставка-подушка для фигурки, декоративная обувь, сменная рука (можно заменить руку с мечом; клинок снимается).
+        </>
+        ),
+        tgLink: "https://t.me/sheep2me_mg",
         isAvailable: true
     },
     // --- СПЕЦ ТОВАР ---
@@ -637,4 +765,8 @@ export const products = [
     }
 ];
 
-export const categories = ["Все", "Honkai: Star Rail", "Zenless Zone Zero", "Genshin Impact", "PopMart", "Arknights", "Другое", "18+", "Индивидуально"];
+/** Товары без Arknights — для отображения обычным пользователям (Arknights временно скрыты). */
+const isArknights = (game) => game === "Arknights" || (Array.isArray(game) && game.includes("Arknights"));
+export const productsForDisplay = products.filter((p) => !isArknights(p.game));
+
+export const categories = ["Все", "Honkai: Star Rail", "Zenless Zone Zero", "Genshin Impact", "PopMart", "Другое", "18+", "Индивидуально"];

@@ -46,6 +46,19 @@ import shopper_set from './assets/shopper_set.webp';
 import gift_box from './assets/gift_box.webp';
 import endfield_bag from './assets/endfield_bag.webp';
 import individual from './assets/individual.webp';
+import kafka_stand from './assets/kafka_stand.png';
+import kafka_display_no_light from './assets/kafka_display_no_light.png';
+import kafka_display_light from './assets/kafka_display_light.png';
+import kafka_1_7 from './assets/kafka_1_7.png';
+import keqing_figure from './assets/keqing_figure.png';
+import zhongli_nendroid from './assets/zhongli_nendroid.png';
+import raiden_genshin from './assets/raiden_genshin.png';
+import zzz_stands_general from './assets/zzz_stands_general.png';
+import zzz_stands_ye_shunguang_a from './assets/zzz_stands_ye_shunguang_a.png';
+import zzz_stands_ye_shunguang_b from './assets/zzz_stands_ye_shunguang_b.png';
+import zzz_stands_yixuan from './assets/zzz_stands_yixuan.png';
+import zzz_stands_pan_yinhu from './assets/zzz_stands_pan_yinhu.png';
+import zzz_stands_ju_fufu from './assets/zzz_stands_ju_fufu.png';
 
 export const IMAGES = {
     logo: logo,
@@ -87,6 +100,19 @@ export const IMAGES = {
     bunnies_plush1: bunnies_plush1,
     bunnies_plush2: bunnies_plush2,
     yvonne_stand: yvonne_stand,
+    kafka_stand: kafka_stand,
+    kafka_display_no_light: kafka_display_no_light,
+    kafka_display_light: kafka_display_light,
+    kafka_1_7: kafka_1_7,
+    keqing_figure: keqing_figure,
+    zhongli_nendroid: zhongli_nendroid,
+    raiden_genshin: raiden_genshin,
+    zzz_stands_general: zzz_stands_general,
+    zzz_stands_ye_shunguang_a: zzz_stands_ye_shunguang_a,
+    zzz_stands_ye_shunguang_b: zzz_stands_ye_shunguang_b,
+    zzz_stands_yixuan: zzz_stands_yixuan,
+    zzz_stands_pan_yinhu: zzz_stands_pan_yinhu,
+    zzz_stands_ju_fufu: zzz_stands_ju_fufu,
     gift_box: gift_box,
     shopper_set: shopper_set,
     endfield_bag: endfield_bag,

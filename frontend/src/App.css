@@ -397,10 +397,11 @@ body[data-theme="default"] {
 .terms-text span { color: #D8548C; text-decoration: underline; cursor: pointer; }
 
 /* --- Модальное окно --- */
-.modal-overlay { background-color: rgba(255, 255, 255, 0.8); backdrop-filter: blur(10px); position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; z-index: 1000; }
-.modal-content { background-color: #ffffff; width: 90%; max-width: 350px; padding: 25px; border-radius: 25px; box-shadow: 0 15px 40px rgba(0,0,0,0.1); text-align: center; border: 1px solid #e1e1e8; position: relative; }
-.close-modal { position: absolute; top: 15px; right: 15px; background: none; border: none; font-size: 30px; line-height: 1; color: #8E8E93; cursor: pointer; }
-.modal-img { width: 100%; height: 200px; overflow: hidden; border-radius: 15px; margin-bottom: 20px; display: flex; align-items: center; justify-content: center; font-size: 80px; }
+.modal-overlay { background-color: rgba(255, 255, 255, 0.8); backdrop-filter: blur(10px); position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; z-index: 1000; padding: 12px; box-sizing: border-box; }
+.modal-content { background-color: #ffffff; width: 90%; max-width: 350px; max-height: 90vh; padding: 25px; border-radius: 25px; box-shadow: 0 15px 40px rgba(0,0,0,0.1); text-align: center; border: 1px solid #e1e1e8; position: relative; display: flex; flex-direction: column; overflow: hidden; box-sizing: border-box; }
+.close-modal { position: absolute; top: 15px; right: 15px; background: none; border: none; font-size: 30px; line-height: 1; color: #8E8E93; cursor: pointer; z-index: 2; }
+.modal-scroll { overflow-y: auto; flex: 1; min-height: 0; -webkit-overflow-scrolling: touch; }
+.modal-img { width: 100%; height: 200px; overflow: hidden; border-radius: 15px; margin-bottom: 20px; display: flex; align-items: center; justify-content: center; font-size: 80px; flex-shrink: 0; }
 .modal-img img { max-width: 100%; max-height: 100%; object-fit: contain; }
 .modal-content h2 { margin: 0 0 5px 0; font-size: 20px; }
 .modal-game { font-size: 11px; color: #D8548C; text-transform: uppercase; font-weight: bold; margin-bottom: 15px; }
@@ -412,7 +413,8 @@ body[data-theme="default"] {
     display: flex; 
     gap: 12px; 
     width: 100%; 
-    margin-top: auto; 
+    margin-top: 12px; 
+    flex-shrink: 0;
     flex-wrap: wrap; /* Позволяет элементам переноситься */
 }
 
@@ -588,6 +590,34 @@ body[data-theme="default"] {
 
 .empty-search span {
   font-size: 13px;
+}
+
+.empty-category {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 40px 20px;
+  color: #8E8E93;
+}
+
+.empty-category-icon {
+  font-size: 48px;
+  margin-bottom: 10px;
+}
+
+.empty-category-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #2D2D32;
+  margin: 0 0 4px 0;
+}
+
+.empty-category-text {
+  font-size: 13px;
+  display: block;
+}
+
+.empty-category-18 + .individual-hint-card {
+  margin-top: 0;
 }
 
 /* --- Анимация карточек --- */

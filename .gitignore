@@ -27,3 +27,7 @@ yarn-error.log*
 .idea/
 .DS_Store
 Thumbs.db
+
+# Внутренняя памятка по ценообразованию (не в репозиторий)
+docs/PRICE_GUIDE.md
+docs

@@ -1,7 +1,7 @@
 import Fuse from 'fuse.js';
 import { useState, useEffect, useMemo, useRef } from 'react';
 import './App.css';
-import { products, categories } from './products';
+import { productsForDisplay, categories } from './products';
 
 import {
   Header,
@@ -266,7 +266,7 @@ function App() {
 
   // Computed values
   const displayedProducts = useMemo(() => {
-    let filtered = products.filter(product => {
+    let filtered = productsForDisplay.filter(product => {
       const gameArray = Array.isArray(product.game) ? product.game : [product.game];
 
       if (searchQuery.trim().length > 0) {
@@ -452,6 +452,7 @@ function App() {
 
           <Catalog
             displayedProducts={displayedProducts}
+            activeCategory={activeCategory}
             cart={cart}
             onOpenModal={openModal}
             onAddToCart={addToCart}

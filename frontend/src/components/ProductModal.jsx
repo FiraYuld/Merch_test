@@ -13,25 +13,27 @@ function ProductModal({
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
         <button className="close-modal" onClick={onClose}>×</button>
-        <div className="modal-img">
-          {currentImg && typeof currentImg === 'string' && currentImg.length > 5 ? (
-            <img src={currentImg} alt={product.name} />
-          ) : (
-            currentImg
-          )}
-        </div>
-        <h2>{product.name}</h2>
+        <div className="modal-scroll">
+          <div className="modal-img">
+            {currentImg && typeof currentImg === 'string' && currentImg.length > 5 ? (
+              <img src={currentImg} alt={product.name} />
+            ) : (
+              currentImg
+            )}
+          </div>
+          <h2>{product.name}</h2>
 
-        <div className="modal-game">
-          {Array.isArray(product.game) ? product.game.join(', ') : product.game}
-        </div>
+          <div className="modal-game">
+            {Array.isArray(product.game) ? product.game.join(', ') : product.game}
+          </div>
 
-        <p className="modal-desc">{product.desc}</p>
+          <p className="modal-desc">{product.desc}</p>
 
-        <div className="modal-price">
-          {product.options && product.options.length > 0
-            ? `${product.options[selectedOptionIndex].price} ₽`
-            : `${product.price} ₽`}
+          <div className="modal-price">
+            {product.options && product.options.length > 0
+              ? `${product.options[selectedOptionIndex].price} ₽`
+              : `${product.price} ₽`}
+          </div>
         </div>
 
         <div className="modal-buttons-row">
