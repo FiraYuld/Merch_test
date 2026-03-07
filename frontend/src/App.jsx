@@ -64,6 +64,13 @@ function App() {
     return savedHistory ? JSON.parse(savedHistory) : [];
   });
   const [showOrderHistory, setShowOrderHistory] = useState(false);
+  const [theme, setTheme] = useState(() => {
+    const saved = localStorage.getItem('sheepTheme');
+    if (saved === 'dark' || saved === 'soft' || !saved) return 'trendy';
+    return saved;
+  });
+  const [toastClosing, setToastClosing] = useState(false);
+  const toastTimerRef = useRef(null);
 
   // Effects
   useEffect(() => {
@@ -77,6 +84,11 @@ function App() {
   useEffect(() => {
     localStorage.setItem('sheepOrderHistory', JSON.stringify(orderHistory));
   }, [orderHistory]);
+
+  useEffect(() => {
+    document.body.dataset.theme = theme;
+    localStorage.setItem('sheepTheme', theme);
+  }, [theme]);
 
   useEffect(() => {
     if (window.Telegram?.WebApp) {
@@ -94,8 +106,20 @@ function App() {
 
   // Handlers
   const showToast = (message) => {
+    if (toastTimerRef.current) {
+      clearTimeout(toastTimerRef.current);
+      toastTimerRef.current = null;
+    }
+    setToastClosing(false);
     setToast(message);
-    setTimeout(() => setToast(""), 2000);
+    toastTimerRef.current = setTimeout(() => {
+      setToastClosing(true);
+      toastTimerRef.current = setTimeout(() => {
+        setToast("");
+        setToastClosing(false);
+        toastTimerRef.current = null;
+      }, 400);
+    }, 2000);
   };
 
   const openModal = (product) => {
@@ -340,7 +364,7 @@ function App() {
 
   return (
     <div className="app-container">
-      <Toast message={toast} />
+      <Toast message={toast} isClosing={toastClosing} />
       <FlyingItem flyingItem={flyingItem} />
 
       <Header
@@ -348,6 +372,8 @@ function App() {
         isCartOpen={isCartOpen}
         setIsCartOpen={setIsCartOpen}
         cartBtnRef={cartBtnRef}
+        theme={theme}
+        setTheme={setTheme}
       />
 
       {showAgeModal && (
