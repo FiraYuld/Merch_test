@@ -22,7 +22,7 @@ const PROMO_CODES = {
   "СОННЫЙ": 0.02,
 };
 
-const TERMS_LINK = "https://t.me/sheep2me/4";
+const TERMS_LINK = "https://t.me/sheep2me/1530";
 const MIN_ORDER_AMOUNT = 1500;
 
 function App() {

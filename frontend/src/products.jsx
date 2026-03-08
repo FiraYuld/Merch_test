@@ -41,7 +41,7 @@ export const products = [
         price: 23700, 
         img: IMAGES.dh_enchanced, // Базовая картинка
         desc: "Стандартная версия: приблизительно 22 см в длину, 21 см в ширину и 33 см в высоту. Расширенная версия: приблизительно 22 см в длину, 28 см в ширину и 38 см в высоту ",
-        tgLink: "https://t.me/telegram/206",
+        tgLink: "https://t.me/sheep2me/1534",
         isAvailable: true,
         options: [
             { name: "Стандартная версия", price: 23700, img: IMAGES.dh_base }, // 988 юаней
@@ -65,7 +65,7 @@ export const products = [
         
         </>
         ),        
-        tgLink: "https://t.me/telegram/206",
+        tgLink: "https://t.me/sheep2me/1534",
         isAvailable: true,
         options: [
             { name: "Без подставки", price: 23700, img: IMAGES.m7_base }, // 988 юаней
@@ -81,7 +81,7 @@ export const products = [
         price: 22100, // 888 юаней
         img: IMAGES.fuxuan, 
         desc: "Приблизительные размеры: высота 24 см, ширина 25 см и длина 21 см",
-        tgLink: "https://t.me/telegram/202",
+        tgLink: "https://t.me/sheep2me/1534",
         isAvailable: true 
         
     },
@@ -104,7 +104,7 @@ export const products = [
         
         </>
         ),        
-        tgLink: "https://t.me/telegram/206",
+        tgLink: "https://t.me/sheep2me/1546",
         isAvailable: true,
         options: [
             { name: "Контроллер, чехол + пин", price: 15600, img: IMAGES.cas_base }, // 799 юаней
@@ -129,7 +129,7 @@ export const products = [
           <b>Размер зарядного устройства :</b> 102 x 95 x 80 мм <br />
         </>
         ),        
-        tgLink: "https://t.me/telegram/206",
+        tgLink: "https://t.me/sheep2me/1546",
         isAvailable: true,
         options: [
             { name: "Контроллер, чехол + пин", price: 15100, img: IMAGES.sam_base }, // 769 юаней
@@ -160,7 +160,7 @@ export const products = [
           <b>В комплекте:</b> кабель USB-A — Type-C, инструкция (трёхрежимная), приёмник 2.4G, съёмник кейкапов/осей, 5 запасных осей того же типа, пылезащитный чехол.
         </>
         ),        
-        tgLink: "https://t.me/telegram/206",
+        tgLink: "https://t.me/sheep2me/1554",
         isAvailable: true,
         options: [
             { name: "87 Клавиш", price: 15200, img: IMAGES.kafka_kb_base }, // 748 юаней
@@ -191,7 +191,7 @@ export const products = [
           <b>В комплекте:</b> кабель USB-A — Type-C, инструкция (трёхрежимная), приёмник 2.4G, съёмник кейкапов/осей, 3 запасные оси того же типа, пылезащитный чехол.
         </>
         ),        
-        tgLink: "https://t.me/telegram/206",
+        tgLink: "https://t.me/sheep2me/1554",
         isAvailable: true,
         options: [
             { name: "87 Клавиш", price: 15500, img: IMAGES.acheron_kb_base }, // 768 юаней
@@ -214,7 +214,7 @@ export const products = [
           <b>16 миллионов регулируемых RGB-цветов</b> <br />
         </>
         ),
-        tgLink: "https://t.me/telegram/202",
+        tgLink: "https://t.me/sheep2me/1554",
         isAvailable: false
     },
 
@@ -230,7 +230,7 @@ export const products = [
           <b>Материал:</b> искусственная кожа из полиуретана, 100% полиэфирное волокно, цинковый сплав. <br />
         </>
         ),
-        tgLink: "https://t.me/telegram/202",
+        tgLink: "https://t.me/sheep2me/1558",
         isAvailable: true 
         
     },
@@ -247,7 +247,7 @@ export const products = [
           <b>Материал:</b> Искусственная кожа из полиуретана, 100% поливинилхлорид (ПВХ), цинковый сплав/железо. <br />
         </>
         ),
-        tgLink: "https://t.me/telegram/202",
+        tgLink: "https://t.me/sheep2me/1558",
         isAvailable: true 
         
     },
@@ -264,7 +264,7 @@ export const products = [
           <b>Материал:</b> Искусственная кожа из полиуретана (ПУ). Использовались термопластичный полиуретан (TPU), горячее прессование, вышивка и покраска краев. <br />
         </>
         ),
-        tgLink: "https://t.me/telegram/202",
+        tgLink: "https://t.me/sheep2me/1558",
         isAvailable: true 
         
     },
@@ -280,7 +280,7 @@ export const products = [
           <b>Размер:</b> 32 см x 7 см x 23 см (без учета плечевых ремней). <br />
           <b>Материал:</b> Искусственная кожа из полиуретана (ПУ), 100% полиэстер, полиуретановая синтетическая кожа (ПУ) <br />        </>
         ),
-        tgLink: "https://t.me/telegram/202",
+        tgLink: "https://t.me/sheep2me/1558",
         isAvailable: true 
         
     },
@@ -297,7 +297,7 @@ export const products = [
           <b>Размеры:</b> 3.2-4.2см <br />
         </>
         ),        
-        tgLink: "https://t.me/telegram/206",
+        tgLink: "https://t.me/sheep2me",
         isAvailable: true,
         options: [
             { name: "1 пакетик", price: 1900, img: IMAGES.chimers_random }, // 69 юаней
@@ -317,7 +317,7 @@ export const products = [
           <b>Карточка и резиновый обвес с персонажем в подарок. </b>
         </>
         ),        
-        tgLink: "https://t.me/telegram/206",
+        tgLink: "https://t.me/sheep2me",
         isAvailable: true,
         options: [
             { name: "Кафка", price: 6400, img: IMAGES.plush_1}, 
@@ -339,7 +339,7 @@ export const products = [
           <b>Размеры:</b> 7-9 см <br />
         </>
         ),        
-        tgLink: "https://t.me/telegram/206",
+        tgLink: "https://t.me/sheep2me",
         isAvailable: true,
         options: [
             { name: "1 бокс", price: 1900, img: IMAGES.banboo_popmart }, // 69 юаней
@@ -362,7 +362,7 @@ export const products = [
           <i>*При покупке набора из 6 боксов есть шанс получить секретную золотую фигурку Рери (выпадение не гарантировано).</i>
         </>
         ),        
-        tgLink: "https://t.me/telegram/207", 
+        tgLink: "https://t.me/sheep2me", 
         isAvailable: true,
         options: [
             { name: "1 бокс", price: 2500, img: IMAGES.genshin_popmart }, // 106 юаней
@@ -384,7 +384,7 @@ export const products = [
           После получения снимите защитную плёнку с поверхности. Избегайте трения о твёрдые и острые предметы, прямых солнечных лучей и высокой влажности. При загрязнении протрите влажной тканью. Не игрушка — храните в недоступном для детей месте.
         </>
         ),
-        tgLink: "https://t.me/sheep2me_mg",
+        tgLink: "https://t.me/sheep2me",
         isAvailable: true,
         options: [
             { name: "Е Шуньгуан (вариант A)", price: 1400, img: IMAGES.zzz_stands_ye_shunguang_a },
@@ -408,7 +408,7 @@ export const products = [
           Ароматы созданы при участии компаний D.S.M. Firmenich, Mane и Symrise. Размер флакона ~55,8×82×29,5 мм, упаковки ~105×157×45 мм.
         </>
         ),
-        tgLink: "https://t.me/sheep2me_mg",
+        tgLink: "https://t.me/sheep2me",
         isAvailable: true,
         options: [
             { name: "Дань Хэн · Пожиратель Луны", price: 4600, img: IMAGES.hsr_perfume_imbibitor, desc: "«Лотос в очах». Топ: грейпфрут, роса. Средние: водяная лилия, мята, эвкалипт. Базовые: ветивер, янтарь, агаровое дерево, сандал, мох." },
@@ -442,7 +442,7 @@ export const products = [
           В комплекте эксклюзивная подставка. Производитель: Good Smile Company.
         </>
         ),
-        tgLink: "https://t.me/sheep2me_mg",
+        tgLink: "https://t.me/sheep2me",
         isAvailable: true
     },
 
@@ -459,7 +459,7 @@ export const products = [
           <b>Есть сменные лица с разными эмоциями.</b>
         </>
         ),        
-        tgLink: "https://t.me/telegram/208", 
+        tgLink: "https://t.me/sheep2me", 
         isAvailable: true
     },
     {
@@ -475,7 +475,7 @@ export const products = [
           <b>Есть сменные лица с разными эмоциями.</b>
         </>
         ),        
-        tgLink: "https://t.me/telegram/209", // Замени на актуальную ссылку
+        tgLink: "https://t.me/sheep2me",
         isAvailable: true
     },
     {
@@ -491,7 +491,7 @@ export const products = [
           <b>Есть сменные лица с разными эмоциями.</b>
         </>
         ),        
-        tgLink: "https://t.me/telegram/210", // Замени на актуальную ссылку
+        tgLink: "https://t.me/sheep2me",
         isAvailable: true
     },
     {
@@ -507,7 +507,7 @@ export const products = [
           <b>Есть сменные лица с разными эмоциями.</b>
         </>
         ),        
-        tgLink: "https://t.me/telegram/211", // Замени на актуальную ссылку
+        tgLink: "https://t.me/sheep2me",
         isAvailable: true
     },
     {
@@ -523,7 +523,7 @@ export const products = [
           <b>Есть сменные лица с разными эмоциями.</b>
         </>
         ),        
-        tgLink: "https://t.me/telegram/212", // Замени на актуальную ссылку
+        tgLink: "https://t.me/sheep2me",
         isAvailable: true
     },
     {
@@ -539,7 +539,7 @@ export const products = [
           <b>Есть сменные лица с разными эмоциями.</b>
         </>
         ),        
-        tgLink: "https://t.me/telegram/213", // Замени на актуальную ссылку
+        tgLink: "https://t.me/sheep2me",
         isAvailable: true
     },
 
@@ -560,7 +560,7 @@ export const products = [
           <i>*Если вы не хотите полагаться на случайность, выберите опцию «Нужный цвет на выбор» и укажите цвет в комментариях к заказу.</i>
         </>
         ),        
-        tgLink: "https://t.me/telegram/214", 
+        tgLink: "https://t.me/sheep2me/1543", 
         isAvailable: true,
         options: [
             { name: "1 коробка (Версия 1)", price: 1900, img: IMAGES.labubu_mini1 }, // 69 юаней
@@ -585,7 +585,7 @@ export const products = [
           <i>*Пожалуйста, укажите нужный размер (M, L или XL) в комментарии при оформлении заказа.</i>
         </>
         ),        
-        tgLink: "https://t.me/telegram/215",
+        tgLink: "https://t.me/sheep2me",
         isAvailable: false,
         options: [
             { name: "Футболка Зиплайн", price: 2800, img: IMAGES.endfield_tshirt1 },
@@ -608,7 +608,7 @@ export const products = [
           <i>*Одежда у игрушек полностью снимается!</i>
         </>
         ),        
-        tgLink: "https://t.me/telegram/216",
+        tgLink: "https://t.me/sheep2me",
         isAvailable: false,
         options: [
             { name: "Зайчик Лэватейн", price: 1300, img: IMAGES.bunnies_plush1 },
@@ -631,7 +631,7 @@ export const products = [
           <b>Особенность:</b> Стенд полностью интерактивный! Ручку автомата можно крутить, и внутри будут падать шарики.
         </>
         ),        
-        tgLink: "https://t.me/telegram/217",
+        tgLink: "https://t.me/sheep2me",
         isAvailable: false
     },
 
@@ -652,7 +652,7 @@ export const products = [
           • 2 значка (7.5 см)
         </>
         ),        
-        tgLink: "https://t.me/telegram/218", // Замени на актуальную ссылку
+        tgLink: "https://t.me/sheep2me",
         isAvailable: false
     },
     {
@@ -672,7 +672,7 @@ export const products = [
           • Ручка (19.6 см)
         </>
         ),        
-        tgLink: "https://t.me/telegram/219", // Замени на актуальную ссылку
+        tgLink: "https://t.me/sheep2me",
         isAvailable: false
     },
 
@@ -693,7 +693,7 @@ export const products = [
           • Высота: ~24 см
         </>
         ),        
-        tgLink: "https://t.me/telegram/220", // Замени на актуальную ссылку
+        tgLink: "https://t.me/sheep2me",
         isAvailable: false
     },
     
@@ -714,7 +714,7 @@ export const products = [
           В комплекте эксклюзивная подставка. Производитель: Myethos.
         </>
         ),
-        tgLink: "https://t.me/sheep2me_mg",
+        tgLink: "https://t.me/sheep2me/1534",
         isAvailable: true
     },
     {
@@ -734,7 +734,7 @@ export const products = [
           <b>Улучшенная:</b> акрил + LED (2 лампы сверху, 1 сзади, 3 снизу; магнитная панель сзади для световой панели; подсветка снизу — отдельный выключатель). Внешние размеры ок. 270×285×388 мм. В комплекте дополнительно: адаптер питания, разветвитель питания.
         </>
         ),
-        tgLink: "https://t.me/sheep2me_mg",
+        tgLink: "https://t.me/sheep2me/1534",
         isAvailable: true,
         options: [
             { name: "Базовая (без подсветки)", price: 12400, img: IMAGES.kafka_display_no_light },
@@ -757,7 +757,7 @@ export const products = [
           В комплекте эксклюзивная подставка.
         </>
         ),
-        tgLink: "https://t.me/sheep2me_mg",
+        tgLink: "https://t.me/sheep2me/1534",
         isAvailable: true
     },
     {
@@ -776,7 +776,7 @@ export const products = [
           Производитель: Myethos.
         </>
         ),
-        tgLink: "https://t.me/sheep2me_mg",
+        tgLink: "https://t.me/sheep2me",
         isAvailable: true
     },
     {
@@ -794,7 +794,7 @@ export const products = [
           В комплекте: подставка-подушка для фигурки, декоративная обувь, сменная рука (можно заменить руку с мечом; клинок снимается).
         </>
         ),
-        tgLink: "https://t.me/sheep2me_mg",
+        tgLink: "https://t.me/sheep2me",
         isAvailable: true
     },
     // --- СПЕЦ ТОВАР ---
@@ -805,7 +805,7 @@ export const products = [
       price: 9999,
       img: IMAGES.individual,
       desc: "Если вы не нашли что хотели, то выбирайте этот товар и менеджер свяжется с вами. Будьте готовы прислать ссылку или фото нужного вам товара. ",
-      tgLink: "https://t.me/sheep2me_mg",
+      tgLink: "https://t.me/sheep2me",
       isAvailable: true
     }
 ];
